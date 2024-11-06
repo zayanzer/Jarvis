@@ -141,3 +141,4 @@ async function delEnv(variableName) {
 };
 
 module.exports = { setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart };
+
