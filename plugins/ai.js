@@ -232,3 +232,4 @@ System({
       m.reply("_*Need Prompt !!*_\n_*eg: .gemini who is iron man?*_\n _For image you have to Reply to an image and also give a prompt_");
    }
 });
+
