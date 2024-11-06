@@ -36,12 +36,12 @@ System({
       if (!match) return await message.reply('_Give a YouTube video *Url* or *Query*_');
      const matchUrl = (await extractUrlsFromText(match))[0];
      if (isUrl(matchUrl)) {
-         const { title, url } = await youtube(matchUrl);
+         const { title, url } = await youtube(matchUrl, "video");
          await message.reply("_*" + "downloading " + title + "*_");
          return await message.send({ url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
       } else {
         const { url } = (await yts(match)).videos[0];
-        const data = await youtube(url);
+        const data = await youtube(url, "video");
         await message.reply("_*" + "downloading " + data.title + "*_"); 
         return await message.send({ url: data.url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
       }
@@ -57,12 +57,12 @@ System({
       if (!match) return await message.reply('_Give a YouTube video *Url* or *Query*_');
      const matchUrl = (await extractUrlsFromText(match))[0];
      if (isUrl(matchUrl)) {
-         const { title, url } = await youtube(matchUrl);
+         const { title, url } = await youtube(matchUrl, "video");
          await message.reply("_*" + "downloading " + title + "*_");
          return await message.send({ url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
       } else {
         const { url } = (await yts(match)).videos[0];
-        const data = await youtube(url);
+        const data = await youtube(url, "video");
         await message.reply("_*" + "downloading " + data.title + "*_"); 
         return await message.send({ url: data.url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
       }
@@ -122,7 +122,7 @@ System({
 }, async (message, match) => {
       if (!match) return await message.reply('_Give a *Query* to play the song or video_');
       if (isUrl(match)) {
-          const matchUrl = extractUrlFromMessage(match);
+          let matchUrl = (await extractUrlsFromText(match))[0];
           const yt = await YtInfo(matchUrl);
           await message.reply(`*_${yt.title}_*\n\n\n\`\`\`1.⬢\`\`\` *audio*\n\`\`\`2.⬢\`\`\` *video*\n\n_*Send a number as a reply to download*_`, {
             contextInfo: {
@@ -196,7 +196,7 @@ System({
       const data = (await yts(match)).videos[0];
       const q = await message.send(`_*Now playing : ${data.title} 🎶*_`);
       await message.send(
-        await getBuffer((await youtube(data.url)).url),
+        await getBuffer((await youtube(data.url, "video")).url),
         { caption: `_*${data.title}*_`, quoted: q },
         'video'
       );
