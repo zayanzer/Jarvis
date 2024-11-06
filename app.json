@@ -6,13 +6,18 @@
     "keywords": ["whatsapp"],
     "repository": "https://github.com/Loki-Xer/Jarvis",
     "website": "https://github.com/Loki-Xer/Jarvis",
-    "success_url": "https://github.com/Loki-Xer/Jarvis",
+    "success_url": "/",
     "stack": "container",
     "env": {
         "BOT_INFO": {
-            "description": "botname;ownername;ownernumber;image url",
+            "description": "botname;ownername;image url",
             "required": true,
             "value":"ᴊᴀʀᴠɪꜱ;ʟᴏᴋɪ-xᴇʀ;https://i.imgur.com/VIpl3q5.mp4"
+        },
+        "MENU_FONT": {
+            "description": "type;plugin name, have to be less than 35",
+            "required": false,
+            "value":"3;8"
         },
         "AUDIO_DATA": {
             "description": "audio package name",
@@ -23,11 +28,6 @@
             "description": "warn count",
             "required": true,
             "value":"3"
-        },
-        "AUTO_STATUS_VIEWS": {
-            "description": "auto status views",
-            "required": true,
-            "value":"false"
         },
         "MEDIA_DATA": {
             "description": "media data that uses in list",
@@ -64,17 +64,48 @@
         "SUDO": {
             "description": "owner number of the bot",
             "required": false,
-            "value":"41782221168"
+            "value":"4915252819677"
+        },
+        "ALLWAYS_ONLINE": {
+            "description": "show bot number last seen as online",
+            "required": false,
+            "value":"false"
+        },
+        "READ_MSG": {
+            "description": "Read all messages",
+            "required": false,
+            "value":"false"
+        },
+        "SAVE_STATUS": {
+            "description": "save all status message",
+            "required": false,
+            "value":"null"
+        },
+        "STATUS_VIEW": {
+            "description": "status views use true for view all status or use only-view=jid to only view given jid status or use not-view=jid to not view the one person status and view anothers",
+            "required": false,
+            "value":"false"
+        },
+        "REJECT_CALL": {
+            "description": "automatic reject call",
+            "required": true,
+            "value":"false"
+        },
+        "ERROR_MSG": {
+            "description": "send error messages to bot number",
+            "required": true,
+            "value":"false"
+        },
+        "BAN_CHATS": {
+            "description": "ban chat from useing bot value: jid1,jid2",
+            "required": false,
+            "value":""
         }
     },
-      "addons": [{
-      "plan": "heroku-postgresql"
-    }],
-    "buildpacks": [{
-      "url": "heroku-community/apt"
-      },
-      {
-      "url": "https://github.com/clhuang/heroku-buildpack-webp-binaries.git"
-      }]
+      "addons": [{ "plan": "heroku-postgresql" }],
+      "buildpacks": [
+                    { "url": "https://github.com/heroku/heroku-buildpack-nodejs#latest" },
+                    { "url": "https://github.com/carlosdommor/heroku-buildpack-ffmpeg-latest" }
+    ]
   }
   
