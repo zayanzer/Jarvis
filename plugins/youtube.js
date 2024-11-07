@@ -38,7 +38,7 @@ System({
      if (isUrl(matchUrl)) {
          const { title, url } = await youtube(matchUrl, "video");
          await message.reply("_*" + "downloading " + title + "*_");
-         return await message.send({ url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
+         return await message.send({ url: url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
       } else {
         const { url } = (await yts(match)).videos[0];
         const data = await youtube(url, "video");
@@ -59,7 +59,7 @@ System({
      if (isUrl(matchUrl)) {
          const { title, url } = await youtube(matchUrl, "video");
          await message.reply("_*" + "downloading " + title + "*_");
-         return await message.send({ url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
+         return await message.send({ url: url }, { caption: '*made with 🤍*', quoted: message.data }, 'video');
       } else {
         const { url } = (await yts(match)).videos[0];
         const data = await youtube(url, "video");
