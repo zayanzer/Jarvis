@@ -114,6 +114,10 @@ System({
     if (message.client.server !== "KOYEB") {
         delete Config.KOYEB_API;
     }
+    if (message.client.server !== "RENDER") {
+        delete Config.RENDER_API;
+        delete Config.RENDER_APP_NAME;
+    }
     let s = '\n*All Your Vars*\n\n';
     for (const key in Config) {
         s += `*${key}*: ${Config[key]}\n\n`;
