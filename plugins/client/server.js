@@ -140,5 +140,32 @@ async function delEnv(variableName) {
     }
 };
 
-module.exports = { setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart };
+async function fetchDynoInfo() {
+    try {
+        const { data: { id } } = await axios.get("https://api.heroku.com/account", {
+            headers: {
+                Authorization: `Bearer ${Config.HEROKU_API_KEY}`,
+                Accept: "application/vnd.heroku+json; version=3"
+            }
+        });
+
+        const { data: quotaData } = await axios.get(`https://api.heroku.com/accounts/${id}/actions/get-quota`, {
+            headers: {
+                Authorization: `Bearer ${Config.HEROKU_API_KEY}`,
+                Accept: "application/vnd.heroku+json; version=3.account-quotas"
+            }
+        });
+
+        const totalQuota = quotaData.account_quota / 3600; 
+        const quotaUsed = quotaData.quota_used / 3600; 
+        const remainingQuota = totalQuota - quotaUsed;
+        const percentageUsed = ((quotaUsed / totalQuota) * 100).toFixed(2);
+
+        return `\`\`\`Eco Dynos Plan\nTotal Quota   : ${totalQuota.toFixed(2)} hours\nUsed Quota    : ${quotaUsed.toFixed(2)} hours (${percentageUsed}%)\nRemaining     : ${remainingQuota.toFixed(2)} hours\`\`\``;
+    } catch (error) {
+        return "Error fetching Heroku quota:", error.message;
+    }
+};
+
+module.exports = { setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart, fetchDynoInfo };
 
