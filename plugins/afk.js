@@ -26,7 +26,7 @@ System({
 	if(message.isBot) return;
 	if(message.fromMe) return;
 	if (!AFK.isAfk)  return;
-	if(!message.mention.isBotNumber && !message.reply_message.i && message.isGroup)  return;
+	if(!message.mention.isBotNumber && !message.quoted && message.isGroup)  return;
 	if (message.mention.isBotNumber && message.isGroup) {
    	    await message.send('```This is a bot. My owner is not here at the moment```\n' +
 		              (AFK.reason !== false ? '\n*Reason:* ```' + AFK.reason + '```' : '') +
@@ -55,6 +55,7 @@ System({
 	fromMe: true
 }, async (message, match) => {
 	if(message.isBot) return;
+	if(message.sender !== message.user.jid) return;
 	if (!AFK.isAfk)  return;
 	AFK.lastseen = 0;
 	AFK.reason = false;
