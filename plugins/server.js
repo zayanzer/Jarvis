@@ -9,7 +9,7 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { gitPull, getDeployments, redeploy, updateBot, setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart } = require("./client/");
+const { gitPull, getDeployments, redeploy, updateBot, setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart, fetchDynoInfo } = require("./client/");
 const { System, isPrivate, sleep, shell, changeVar, setData, config: Config } = require("../lib/");
 const { version } = require('../package.json');
 const simpleGit = require("simple-git");
@@ -143,6 +143,18 @@ System({
     type: "server" 
  }, async (message, match) => {
     await message.reply("_*SUDO NUMBER'S ARA :*_ "+"```"+Config.SUDO+"```")
+});
+
+System({
+    pattern: "dyno",
+    fromMe: true,
+    type: "server",
+    desc: "Show Quota info",
+}, async (message) => {
+    if(message.server !== "HEROKU") return await message.reply(`_this cmd for heroku_`);
+    if(Config.HEROKU_API_KEY) return await message.send("*Can't find HEROKU_API_KEY*");
+    const dyno = await fetchDynoInfo();
+    await message.reply(dyno);
 });
 
 System({
