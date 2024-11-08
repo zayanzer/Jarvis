@@ -155,7 +155,7 @@ System({
     type: "server",
     desc: "Show Quota info",
 }, async (message) => {
-    if(message.server !== "HEROKU") return await message.reply(`_this cmd for heroku_`);
+    if(message.client.server !== "HEROKU") return await message.reply(`_this cmd for heroku_`);
     if(!Config.HEROKU_API_KEY) return await message.send("*Can't find HEROKU_API_KEY*");
     const dyno = await fetchDynoInfo();
     await message.reply(dyno);
