@@ -6,7 +6,7 @@ services:
     env: docker
     dockerfilePath: Dockerfile
     plan: free
-    autoDeploy: false
+    autoDeploy: true
     envVars:
       - key: RENDER_APP_NAME
         sync: false
