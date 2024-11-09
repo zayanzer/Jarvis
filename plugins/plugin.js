@@ -90,6 +90,7 @@ System({
      } else {      
        delete require.cache[require.resolve(pluginPath)];
        fs.unlinkSync(pluginPath);
-       await message.send(`_*Plugin ${match} deleted successfully*_`);
+       await message.send(`_*Plugin ${match} deleted successfully bot is restarting*_`);
+       await require('pm2').restart('index.js');
     }
 });
