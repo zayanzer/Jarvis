@@ -51,10 +51,7 @@ System({
         try {
           var { data, status } = await axios.get(url);
           if (status == 200) {
-            pluginName = data.match(/(?<=pattern:) ["'](.*?)["']/g).map(match => match.trim().split(" ")[0]).join(', ').replace(/'/g, '').replace(/"/g, '');
-            if (!pluginName) {
-              pluginName = "__" + Math.random().toString(36).substring(8); 
-            }
+            pluginName = (data.match(/(?<=pattern:) ["'](.*?)["']/g) || []).map(match => match.trim().split(" ")[0]).join(', ').replace(/['"]/g, '') || "__" + Math.random().toString(36).substring(8);
             fs.writeFileSync(__dirname + "/" + pluginName.split(',')[0] + ".js", data);
             try {
               require("./" + pluginName.split(',')[0]);
