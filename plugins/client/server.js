@@ -218,7 +218,7 @@ async function railwayRestart() {
   }
 }
 
-async function upsertVariable(name, value) {
+async function upsertVariable(name, value, m) {
   try {
     const { app, environment, service } = await fetchDelpoy();
     const { data } = await axios.post(
@@ -228,7 +228,7 @@ async function upsertVariable(name, value) {
       },
       { headers: { Authorization: `Bearer ${Config.RAILWAY_API}`, 'Content-Type': 'application/json' } }
     );
-    return data.data.variableUpsert;
+    return data.data.variableUpsert ? m.send(`Variable has changed. Please redeploy manually at: https://railway.app/project/${process.env.RAILWAY_PROJECT_ID}/service/${process.env.RAILWAY_SERVICE_ID}`) : m.send(`Error in changing the variable. Please update it manually at: https://railway.app/project/${process.env.RAILWAY_PROJECT_ID}/service/${process.env.RAILWAY_SERVICE_ID}`);
   } catch (error) {
     console.error("Error upserting variable:", error);
     throw error;
