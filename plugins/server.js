@@ -111,14 +111,18 @@ System({
     if (message.client.server !== "HEROKU") {
         delete Config.HEROKU_API_KEY;
         delete Config.HEROKU_APP_NAME;
-    }
+    };
     if (message.client.server !== "KOYEB") {
         delete Config.KOYEB_API;
-    }
+        delete Config.KOYEB_APP_NAME;
+    };
     if (message.client.server !== "RENDER") {
         delete Config.RENDER_API;
         delete Config.RENDER_APP_NAME;
-    }
+    };
+    if (message.client.server !== "RAILWAY") {
+        delete Config.RAILWAY_API;
+    };
     let s = '\n*All Your Vars*\n\n';
     for (const key in Config) {
         s += `*${key}*: ${Config[key]}\n\n`;
