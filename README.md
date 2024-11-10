@@ -25,7 +25,9 @@ jarvis md is Multi Device whatsapp bot
     <br>
 <a href='https://railway.app/login' target="_blank"><img alt='railway' src='https://img.shields.io/badge/-Create-black?style=for-the-badge&logo=railway&logoColor=white'/></a>
 
-2. Now Deploy
+2.Get [Railway api key](https://railway.app/account/tokens)
+
+3. Now Deploy
     <br>
 <a href='https://qr-dnpk.onrender.com/railway.html' target="_blank"><img alt='DEPLOY' src='https://img.shields.io/badge/-DEPLOY-black?style=for-the-badge&logo=railway&logoColor=white'/></a>
 
