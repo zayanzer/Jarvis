@@ -9,7 +9,7 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { gitPull, getDeployments, redeploy, updateBot, setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart, fetchDynoInfo } = require("./client/");
+const { gitPull, getDeployments, redeploy, updateBot, setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart, fetchDynoInfo, upsertVariable, railwayRestart } = require("./client/");
 const { System, isPrivate, sleep, shell, changeVar, setData, config: Config } = require("../lib/");
 const { version } = require('../package.json');
 const simpleGit = require("simple-git");
@@ -48,7 +48,7 @@ System({
     const koyebEnv = await changeEnv(key.toUpperCase(), value);
     await m.reply(koyebEnv);
   } else if (server === "RAILWAY") {
-    await m.reply(`*${server} can't change variable, change it manually*`);
+    await upsertVariable(key.toUpperCase(), value, m);
   } else {
     const env = await changeVar(key.toUpperCase(), value);
     if (!env) return m.send("*Error in changing variable*");
@@ -88,7 +88,7 @@ System({
       const koyebEnv = await changeEnv(key.toUpperCase(), null);
       await m.reply(`_*deleted var ${key.toUpperCase()}*_`);
     } else if (server === "RAILWAY") {
-      await m.reply(`*${server} can't change variable, change it manually*`);
+      await upsertVariable(key.toUpperCase(), null, m);
     } else {
       const env = await changeVar(key.toUpperCase(), "");
       if (!env) return m.reply("*Error in deleted variable*");  
@@ -201,7 +201,7 @@ System({
     } else if (server === "RENDER") {
         await setEnv("SUDO", setSudo);
     } else if (server === "RAILWAY") {
-      await m.reply(`*${server} can't change variable, change it manually*`);
+      await upsertVariable("SUDO", setSudo, m);
     } else {
       const env = await changeVar("SUDO", setSudo);
       if (!env) return m.send("*Error set sudo*");  
@@ -215,7 +215,7 @@ System({
   fromMe: true,
   desc: "delete sudo sudo",
   type: "server",
-}, async (m, text, message) => {
+}, async (m, text, message, m) => {
   const server = message.client.server;
   let sudoNumber = m.quoted? m.reply_message.sender : text;
   sudoNumber = sudoNumber.split("@")[0];
@@ -233,7 +233,7 @@ System({
     } else if (server === "RENDER") {
        await setEnv("SUDO", newSudoList);
     } else if (server === "RAILWAY") {
-      await m.reply(`*${server} can't change variable, change it manually*`);
+      await upsertVariable("SUDO", newSudoList, m);
     } else {
       const env = await changeVar("SUDO", newSudoList);
       if (!env) return m.send("*Error set sudo*");  
@@ -293,6 +293,8 @@ System({
       await herokuRestart(message)
   } else if (message.client.server === "RENDER") {
       await renderRestart();
+  } else if (message.client.server === "RAILWAY") {
+      await railwayRestart();
   } else {
       await shell("pm2 restart Jarvis-md");
   };
@@ -331,7 +333,8 @@ System({
     case "RENDER":
       env = await setEnv("WORK_TYPE", workType);
     case "RAILWAY":
-      return m.reply(`*${message.client.server} can't change variable, change it manually*`);
+     env = await upsertVariable("WORK_TYPE", workType, m);
+     break;
     default:
       env = await changeVar("WORK_TYPE", workType);
       if (!env) return await m.send("*Error in changing variable*");
