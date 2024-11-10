@@ -67,7 +67,7 @@ const {
         const stickerPackNameParts = config.STICKER_PACKNAME.split(";");
         const packname = stickerPackNameParts[0];
         const author = stickerPackNameParts[1];
-        await message.send(config.BASE_URL + `api/attp?text=${encodeURIComponent(match)}`, { packname, author }, "sticker");
+        await message.send("https://api-loki-ser-1o2h.onrender.com/" + `api/attp?text=${encodeURIComponent(match)}`, { packname, author }, "sticker");
   });
   
    
@@ -104,7 +104,7 @@ const {
         LANG = lang[1];
         if (message.reply_message.text) match = message.reply_message.text;
       }
-      const response = await fetch(config.BASE_URL + 'google/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: match, lang: LANG }) });
+      const response = await fetch(api + 'tools/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: match, lang: LANG }) });
       if (response.ok) {
           const data = await response.arrayBuffer();
           await message.reply(Buffer.from(data), { mimetype: 'audio/ogg; codecs=opus', ptt: true }, "audio");
@@ -123,14 +123,14 @@ const {
       if (!message.body.includes('@') || !message.body.includes('‣')) return;
       if (message.body.includes("1")) {
           const text = message.body.split(" ");
-          const data = await postJson(config.BASE_URL + "scraper/checkmail", { email: text[2] });
-      if (data.tempmail.length === 0) return message.reply("_*Mail box is empty*_");
-          const formattedResponse = `\n  *Temp Mail ✉️*\n\n${data.tempmail.map((mail, index) => `\n  • *From :* ${mail.from}\n  • *Subject :* ${mail.subject}\n  • *Date :* ${mail.date}\n  • *Id :* ${mail.id}\n  • *Mail Number:* ${index + 1}`).join("\n\n")}`;
+          const { tempmail: result } = await postJson(api + "tools/tempmail", { q: text[2] });
+      if (tempmail.length === 0) return message.reply("_*Mail box is empty*_");
+          const formattedResponse = `\n  *Temp Mail ✉️*\n\n${tempmail.map((mail, index) => `\n  • *From :* ${mail.from}\n  • *Subject :* ${mail.subject}\n  • *Date :* ${mail.date}\n  • *Id :* ${mail.id}\n  • *Mail Number:* ${index + 1}`).join("\n\n")}`;
           await message.send(formattedResponse);
       } else if (message.body.includes("2")) {
-         const { tempmail } = await getJson(config.BASE_URL + "scraper/tempmail");
+         const { result } = await getJson(api + "tools/tempmail");
          const user = await message.store.getName(message.sender);
-         const data = await postJson(config.BASE_URL + "scraper/checkmail", { email: tempmail });
-         await message.send(`*_${tempmail}_*\n\n*Dear user, this is your temp mail*\n\n*User: ${user}*\n*Mail received: ${data.tempmail.length}*\n\n\`\`\`1 ‣\`\`\` *Check mail*\n\`\`\`2 ‣\`\`\` *Next mail*\n\n*_Send a Number as reply_*`);
+         const { tempmail: result } = await postJson(api + "tools/tempmail", { q: tempmail });
+         await message.send(`*_${result}_*\n\n*Dear user, this is your temp mail*\n\n*User: ${user}*\n*Mail received: ${tempmail.length}*\n\n\`\`\`1 ‣\`\`\` *Check mail*\n\`\`\`2 ‣\`\`\` *Next mail*\n\n*_Send a Number as reply_*`);
       }
   });
