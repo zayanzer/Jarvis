@@ -27,6 +27,19 @@ async function getAppId() {
   }
 };
 
+async function getRenderEnv() {
+  try {
+    const appId = await getAppId();
+    if (!appId) return false;
+    const envResponse = await axiosInstance.get(`/services/${appId}/env-vars`);
+    const envVars = envResponse.data.map(item => item.envVar);
+    return envVars;
+  } catch (error) {
+    console.error("Error fetching environment variables:", error);
+    return false;
+  }
+};
+
 async function setVar(key, value) {
   try {
     const response = await heroku.patch(`${baseURI}/config-vars`, {
@@ -108,12 +121,8 @@ async function updateDeploy(options) {
 async function setEnv(variableName, value) {
     const appId = await getAppId();
     if (!appId) return false;
-    const payload = [
-        {
-            key: variableName,
-            value: value
-        }
-    ];
+    const payload = await getRenderEnv();
+    payload.push({ key: variableName, value: value });
     try {
         const response = await axiosInstance.put(`/services/${appId}/env-vars`, payload);
         await updateDeploy('do_not_clear');
