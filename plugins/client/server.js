@@ -176,5 +176,64 @@ async function fetchDynoInfo() {
     }
 };
 
-module.exports = { setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart, fetchDynoInfo };
+async function fetchDelpoy() {
+  try {
+    const { data } = await axios.post(
+      'https://backboard.railway.app/graphql/v2',
+      { query: `query me { me { projects { edges { node { id name services { edges { node { id name } } } environments { edges { node { id name } } } } } } } }` },
+      { headers: { Authorization: `Bearer ${Config.RAILWAY_API}`, 'Content-Type': 'application/json' } }
+    );
+    const app = data.data.me.projects.edges.find(p => p.node.name === process.env.RAILWAY_PROJECT_NAME);
+    const service = app.node.services.edges.find(s => s.node.name === process.env.RAILWAY_SERVICE_NAME);
+    const environment = app.node.environments.edges.find(e => e.node.name === process.env.RAILWAY_ENVIRONMENT);
+    return { app: app.node, service: service.node, environment: environment.node };
+  } catch (error) {
+    console.error('Error fetching app data:', error);
+    throw error;
+  }
+}
+
+async function railwayRestart() {
+  try {
+    const { app, environment, service } = await fetchDelpoy();    
+    const { data: delpoyID } = await axios.post(
+      'https://backboard.railway.app/graphql/v2',
+      {
+        query: `query { deployments(first: 1, input: { projectId: "${app.id}", environmentId: "${environment.id}", serviceId: "${service.id}" }) { edges { node { id } } } }`
+      },
+      { headers: { Authorization: `Bearer ${Config.RAILWAY_API}`, 'Content-Type': 'application/json' } }
+    );
+    const deploymentId = delpoyID.data.deployments.edges[0]?.node.id;
+    const { data } = await axios.post(
+      'https://backboard.railway.app/graphql/v2',
+      { 
+        query: `mutation deploymentRestart { deploymentRestart(id: "${deploymentId}") }` 
+      },
+      { headers: { Authorization: `Bearer ${Config.RAILWAY_API}`, 'Content-Type': 'application/json' } }
+    );
+    return data;
+  } catch (error) {
+    console.error('Error fetching deployment ID:', error);
+    throw error;
+  }
+}
+
+async function upsertVariable(name, value) {
+  try {
+    const { app, environment, service } = await fetchDelpoy();
+    const { data } = await axios.post(
+      'https://backboard.railway.app/graphql/v2',
+      {
+        query: `mutation { variableUpsert(input: { projectId: "${app.id}", environmentId: "${environment.id}", serviceId: "${service.id}", name: "${name}", value: "${value}" }) }`
+      },
+      { headers: { Authorization: `Bearer ${Config.RAILWAY_API}`, 'Content-Type': 'application/json' } }
+    );
+    return data.data.variableUpsert;
+  } catch (error) {
+    console.error("Error upserting variable:", error);
+    throw error;
+  }
+};
+
+module.exports = { setVar, changeEnv, herokuRestart, updateDeploy, delEnv, setEnv, renderRestart, fetchDynoInfo, upsertVariable, railwayRestart };
 
