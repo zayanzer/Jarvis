@@ -215,7 +215,7 @@ System({
   fromMe: true,
   desc: "delete sudo sudo",
   type: "server",
-}, async (m, text, message, m) => {
+}, async (m, text, message) => {
   const server = message.client.server;
   let sudoNumber = m.quoted? m.reply_message.sender : text;
   sudoNumber = sudoNumber.split("@")[0];
