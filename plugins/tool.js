@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
 const { Message } = require("../lib/Base/");  
-const { System, sendAlive, setData, getData, isPrivate, config, IronMan, database, removeData, } = require("../lib/");  
+const { System, sendAlive, setData, getData, isPrivate, config, IronMan, database, removeData, sendSv } = require("../lib/");  
 const { getUptime, Runtime } = require("./client/"); 
 
 System({
@@ -300,4 +300,14 @@ System({
     } else {
         await message.reply("_*autoreaction on/off*__");
     }}
+});
+
+System({
+	pattern: 'svid ?(.*)',
+	fromMe: isPrivate,
+	desc: 'Screenrecord website',
+	type: 'tool',
+}, async (m, match) => {
+	if(!match) return await m.reply("Need a url");
+	await sendSv(m, match);
 });
