@@ -308,6 +308,6 @@ System({
 	desc: 'Screenrecord website',
 	type: 'tool',
 }, async (m, match) => {
-	if(!match) return await m.reply("Need a url");
+	if(!match) return await m.reply("*NEED WEBSITE URL!*");
 	await sendSv(m, match);
 });
