@@ -28,7 +28,7 @@ module.exports = {
   LANG: process.env.LANG || 'EN',
   SETVV: process.env.SETVV || 'DM',
   ELEVENLABS: process.env.ELEVENLABS,
-  HANDLERS: process.env.HANDLERS || process.env.HANDLER || process.env.PREFIX || '/',
+  HANDLERS: process.env.HANDLERS || process.env.HANDLER || process.env.PREFIX || "^[.,!]",
   ALLWAYS_ONLINE: toBool(process.env.ALLWAYS_ONLINE || "false"),
   READ_MSG: toBool(process.env.READ_MSG || "false"),
   BRANCH: "main",
@@ -45,7 +45,7 @@ module.exports = {
   CALL_BLOCK: toBool(process.env.CALL_BLOCK) || false,
   SAVE_STATUS: toBool(process.env.SAVE_STATUS) || false,
   STATUS_VIEW: process.env.STATUS_VIEW || "true",
-  REJECT_CALL: toBool(process.env.REJECT_CALL || "false"),
+  REJECT_CALL: toBool(process.env.REJECT_CALL || "true"),
   ERROR_MSG: toBool(process.env.ERROR_MSG) || true,
   WELCOME_MSG: process.env.WELCOME_MSG || "Hi &mention Welcome to &gname",
   GOODBYE_MSG: process.env.GOODBYE_MSG || "Hi $mention It was Nice Seeing you",
@@ -64,4 +64,3 @@ module.exports = {
   WORK_TYPE: process.env.WORK_TYPE || 'public',
   DATABASE: DATABASE_URL === "./database.db" ? new Sequelize({ dialect: "sqlite", storage: DATABASE_URL, logging: false }) : new Sequelize(DATABASE_URL, {dialect: "postgres", ssl: true, protocol: "postgres", dialectOptions: { native: true, ssl: { require: true, rejectUnauthorized: false },}, logging: false }),
 };
-
