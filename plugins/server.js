@@ -138,8 +138,8 @@ System({
 }, async (message, match) => {
     if(!match) return message.reply("_*eg: getvar sudo*_");
     const requestedVar = match.trim().toUpperCase();
-    if (Config.hasOwnProperty(requestedVar)) {
-        message.reply(`*${requestedVar}*: ${Config[requestedVar]}`);
+    if (process.env.hasOwnProperty(requestedVar)) {
+        message.reply(`*${requestedVar}*: ${process.env[requestedVar]}`);
     } else {
         message.reply(`_*Variable '${requestedVar}' not found.*_`);
     }
