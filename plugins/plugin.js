@@ -27,7 +27,7 @@ System({
   if (!match) return await message.send("_Send a plugin url to install plugin_");
   if (match === "list") {
     const data = await pluginList(); 
-    if(!data) return message.send("_*no plugin installed*_");
+    if (!data || data.length === 0) return message.send("_*No plugin installed*_");
     data.forEach(item => {
       pluginName += `*${item.name}:* ${item.url}\n`;
     });
