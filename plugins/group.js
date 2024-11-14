@@ -398,6 +398,7 @@ System({
 	desc: "Warn a user",
 	type: "group",
 }, async (message, match) => {
+	if(!message.isGroup) return;
         let user = message.mention.jid?.[0] || message.reply_message.sender;
 	if (!user) return message.reply("_Reply to someone/mention_\n*Example:* . warn @user\n_To reset warn_\n*Example:* .warn reset");
 	const jid = parsedJid(user);
@@ -406,7 +407,7 @@ System({
 	let userIsAdmin = await isAdmin(message, user);
 	if(userIsAdmin) return await message.send(`_user is admin @${jid[0].split("@")[0]}_`, { mentions: jid });
 	const name = await message.store.getName(user);
-    await warnMessage(message, match, user, name);
+        await warnMessage(message, match, user, name);
 });
 
 System({
