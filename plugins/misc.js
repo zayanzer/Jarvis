@@ -13,7 +13,6 @@ const {
     isUrl,
     System,
     config,
-    LokiXer,
     getJson,
     postJson,
     isPrivate,
@@ -53,24 +52,8 @@ const {
      if (!message.quoted) return;
      await message.client.forwardMessage(message.user.jid, message.reply_message.message);
   });
-  
-   
-  System({
-      pattern: "attp",
-      fromMe: isPrivate,
-      desc: "Text to animated sticker",
-      type: "converter",
-  }, async (message, match) => {
-     match = match || message.reply_message && message.reply_message.text 
-     if (!match) return await message.reply("_Give me some text_");       
-        await message.send("_making text into attp, it may take up to 1 minute_");
-        const stickerPackNameParts = config.STICKER_PACKNAME.split(";");
-        const packname = stickerPackNameParts[0];
-        const author = stickerPackNameParts[1];
-        await message.send("https://api-loki-ser-1o2h.onrender.com/" + `api/attp?text=${encodeURIComponent(match)}`, { packname, author }, "sticker");
-  });
-  
-   
+
+
   System({
       pattern: 'whois ?(.*)',
       fromMe: isPrivate,
