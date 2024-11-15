@@ -22,11 +22,11 @@ const actions = ['kick','warn','null']
 
 System({
     pattern: 'antiword ?(.*)',
-    desc: 'remove users who use restricted words',
     type: "manage",
-    fromMe: true 
+    fromMe: true,
+    onlyGroup: true,
+    desc: 'remove users who use restricted words'
 }, async (message, match, m) => {
-    if(!message.isGroup) return;
     if (!match) return await message.reply("_*antiword* on/off_\n_*antiword* action warn/kick/null_");
         const antiword = await transformData(message.jid, "antiword")
     if(match.toLowerCase() == 'get') {
@@ -61,11 +61,11 @@ System({
 
 System({
     pattern: 'antilink ?(.*)',
-    desc: 'remove users who use bot',
     type: "manage",
-    fromMe: true 
+    fromMe: true,
+    onlyGroup: true,
+    desc: 'remove users who use bot'
 }, async (message, match) => {
-    if(!message.isGroup) return;
     if (!match) return await message.reply("_*antilink* on/off_\n_*antilink* action warn/kick/null_");
     const { antilink } = await getData(message.chat);
     if(match.toLowerCase() === 'on') {
@@ -87,11 +87,11 @@ System({
 
 System({
     pattern: 'antifake ?(.*)',
-    desc: 'remove fake numbers',
     fromMe: true,
-    type: 'manage'
+    type: 'manage',
+    onlyGroup: true,
+    desc: 'remove fake numbers'
 }, async (message, match) => {
-    if(!message.isGroup) return;
     if (!match) return await message.reply('_*antifake* 94,92_\n_*antifake* on/off_\n_*antifake* list_');
     const { antifake } = await getData(message.chat);
     if(match.toLowerCase()==='get'){
@@ -115,11 +115,11 @@ System({
 
 System({
     pattern: 'antibot ?(.*)',
-    desc: 'remove users who use bot',
     type: "manage",
-    fromMe: true 
+    fromMe: true,
+    onlyGroup: true,
+    desc: 'remove users who use bot'
 }, async (message, match) => {
-    if(!message.isGroup) return;
     if (!match) return await message.reply("_*antibot* on/off_\n_*antibot* action warn/kick/null_");
     const { antibot } = await getData(message.chat)
     if(match.toLowerCase() === 'on') {
@@ -141,11 +141,11 @@ System({
 
 System({
     pattern: 'antidemote ?(.*)',
-    desc: 'demote actor and re-promote demoted person',
     type: 'manage',
-    fromMe: true
+    fromMe: true,
+    onlyGroup: true,
+    desc: 'demote actor and re-promote demoted person'
 }, async (message, match) => {
-    if(!message.isGroup) return;
     if (!match) return await message.send("Choose settings to change antidemote settings", { values: [{ displayText: "on", id: "antidemote on"}, { displayText: "off", id: "antidemote off"}], onlyOnce: true, withPrefix: true, participates: [message.sender] }, "poll");
     if (match != 'on' && match != 'off') return message.reply('_antidemote on_');
     const { antidemote } = await getData(message.jid);
@@ -162,9 +162,10 @@ System({
 
 System({
     pattern: 'antipromote ?(.*)',
-    desc: 'demote actor and re-promote demoted person',
     type: 'manage',
-    fromMe: true
+    fromMe: true,
+    onlyGroup: true,
+    desc: 'demote actor and re-promote demoted person'
 }, async (message, match) => {
     if(!message.isGroup) return;
     if (!match) return await message.send("Choose settings to change antipromote settings", { values: [{ displayText: "on", id: "antipromote on"}, { displayText: "off", id: "antipromote off"}], onlyOnce: true, withPrefix: true, participates: [message.sender] }, "poll");
@@ -184,8 +185,9 @@ System({
 System({
     pattern: "antidelete",
     fromMe: true,
-    desc: "Manage anti-delete settings",
     type: "manage",
+    onlyGroup: true,
+    desc: "Manage anti-delete settings",
 }, async (message, match) => {
 	if(!match) return await message.reply(`*To Update Antidelete Settings*\n\n${message.prefix} *Antidelete On.* - \`\`\`Enable Antidelete\`\`\` \n${message.prefix} *Antidelete Off.* - \`\`\`Disable Antidelete\`\`\` \n\n${message.prefix} *Antidelete Only/PM.* - \`\`\`Activate Antidelete for private messages only.\`\`\` \n${message.prefix} *Antidelete Only/Group.* - \`\`\`Activate Antidelete for group messages only.\`\`\` \n${message.prefix} *Antidelete PM/Group.* - \`\`\`Activate Antidelete for both groups and private messages.\`\`\` \n\n${message.prefix} *Antidelete Send Deleted Message to /chat.* - \`\`\`Send deleted messages to a specific chat. Use /chat, /sudo for your bot number, /pm for another number use /JID.\`\`\` `);
 	const antidelete = await transformData(message.user.id, "antidelete")
