@@ -14,11 +14,11 @@ const { System, setData, getData } = require('../lib/');
 
 System({
     pattern: 'welcome ?(.*)',
-    desc: 'set welcome message',
     type: 'greetings',
     fromMe: true,
+    onlyGroup: true,
+    desc: 'set welcome message'
 }, async (message, match) => {
-    if (!message.isGroup) return;
     const { welcome } = await getData(message.from);
     if (match.toLowerCase() === 'get') {
         if (!welcome || !welcome.message) return await message.send('*_Not Set Yet_*');
@@ -43,11 +43,11 @@ System({
 
 System({
     pattern: 'goodbye ?(.*)',
-    desc: 'set goodbye message',
     type: 'greetings',
     fromMe: true,
+    onlyGroup: true,
+    desc: 'set goodbye message'
 }, async (message, match) => {
-    if (!message.isGroup) return;
     const { exit } = await getData(message.jid);
     if (match.toLowerCase() === 'get') {
         if (!exit || !exit.message) return await message.send('*_Not Set Yet_*');
