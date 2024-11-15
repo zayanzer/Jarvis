@@ -221,7 +221,7 @@ System({
             msg = await setData(message.user.id, match, "true", "mention");       
         }
         if (msg) {
-            return await message.reply('_Mention Updated__');
+            return await message.reply('_Mention Updated_');
         } else {
             return await message.reply('_Error in updating__');
         }
