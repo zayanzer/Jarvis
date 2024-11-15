@@ -10,32 +10,8 @@ Jarvis - Loki-Xer
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-const { System, IronMan, isPrivate, getJson } = require("../lib/");
+const { System, IronMan, isPrivate, getJson, Google, isUrl } = require("../lib/");
 
-System({
-    pattern: 'ig ?(.*)',
-    fromMe: isPrivate,
-    desc: 'Instagram profile details',
-    type: 'search',
-}, async (message, match) => {
-    if (!match) return await message.reply("*Need a username*\n_Example: .ig sedboy.am_");
-    var data = await getJson(IronMan(`ironman/igstalk?id=${encodeURIComponent(match.trim())}`));
-    var caption = '';
-    if (data.name) caption += `*𖢈ɴᴀᴍᴇ:* ${data.name}\n`;
-    if (data.username) caption += `*𖢈ᴜꜱᴇʀɴᴀᴍᴇ:* ${data.username}\n`;
-    if (data.bio) caption += `*𖢈ʙɪᴏ:* ${data.bio}\n`;
-    if (data.pronouns && data.pronouns.length > 0) caption += `*𖢈ᴘʀᴏɴᴏᴜɴꜱ:* ${data.pronouns.join(', ')}\n`;
-    if (data.followers) caption += `*𖢈ꜰᴏʟʟᴏᴡᴇʀꜱ:* ${data.followers}\n`;
-    if (data.following) caption += `*𖢈ꜰᴏʟʟᴏᴡɪɴɢ:* ${data.following}\n`;
-    if (data.category) caption += `*𖢈ᴄᴀᴛᴇɢᴏʀʏ:* ${data.category}\n`;
-    if (typeof data.private !== 'undefined') caption += `*𖢈ᴘʀɪᴠᴀᴛᴇ ᴀᴄᴄ:* ${data.private}\n`;
-    if (typeof data.business !== 'undefined') caption += `*𖢈ʙᴜꜱꜱɪɴᴇꜱ ᴀᴄᴄ:* ${data.business}\n`;
-    if (data.email) caption += `*𖢈ᴇᴍᴀɪʟ:* ${data.email}\n`;
-    if (data.url) caption += `*𖢈ᴜʀʟ:* ${data.url}\n`;
-    if (data.contact) caption += `*𖢈ɴᴜᴍʙᴇʀ:* ${data.contact}\n`;
-    if (data.action_button) caption += `*𖢈ᴀᴄᴛɪᴏɴ ʙᴜᴛᴛᴏɴ:* ${data.action_button}\n`;
-    await message.client.sendMessage(message.chat, { image: { url: data.hdpfp }, caption: caption.trim() }, { quoted: message });
-});
 
 System({
     pattern: 'google ?(.*)',
@@ -44,7 +20,7 @@ System({
     type: 'search',
 }, async (message, match, m) => {
     if (!match) return await message.reply("*Need a query to search*\n_Example: who is iron man_");
-    const { result: data } = await getJson(api + "search/google?q=" + match);
+    const data = await Google(match);
     let response = '';
     data.forEach((result, i) => {
         response += `\n`;
@@ -62,9 +38,9 @@ System({
         type: "search"
 }, async (message, match) => {
         if (!match) return await message.send("*Need a query to search*\n_Example: who is iron man_");
-        const { result: response } = await getJson(api + "search/google?q=" + match);
-        const text = `*⬢ Title*: ${response[0].title}\n\n*⬢ Description*: _${response[0].description}_\n`
-        await message.client.sendButton(message.jid, { buttons: [{ name: "cta_url", display_text: "Visit Google", url: response[0].link, merchant_url: response[0].link, action: "url", icon: "", style: "link" }], body: "", footer: "*JARVIS-MD*", title: text });
+        const response = await Google(match);
+        const text = `*⬢ Title*: ${response[0].title}\n\n*⬢ Description*: _${response[0].description}_\n\n*⬢ Link*: ${response[0].link}`
+        await message.reply(text);
 });
 
 System({
@@ -153,20 +129,6 @@ System({
 });
 
 System({
-    pattern: 'gitinfo ?(.*)',
-    fromMe: isPrivate,
-    desc: 'github user details',
-    type: 'search',
-}, async (message, match) => {
-    if (!match) return await message.reply("*_Need Github UserName_*");   
-    const data = await getJson(`https://api.github.com/users/${match}`);
-    const GhUserPP = data.avatar_url || "https://graph.org/file/924bcf22ea2aab5208489.jpg";
-    const userInfo = `\n⎔ *Username* : ${data.login} \n⎔ *Name* : ${data.name || "Not Available"} \n⎔ *Bio* : ${data.bio || "Not Available"} \n\n➭ *ID* : ${data.id}\n➭ *Followers* : ${data.followers}\n➭ *Following* : ${data.following}\n➭ *Type* : ${data.type}\n➭ *Company* : ${data.company || "Not Available"}\n➭ *Public Repos* : ${data.public_repos}\n➭ *Public Gists* : ${data.public_gists}\n➭ *Email* : ${data.email || "Not Available"}\n➭ *Twitter* : ${data.twitter_username || "Not Available"}\n➭ *Location* : ${data.location || "Not Available"}\n➭ *Blog* : ${data.blog || "Not Available"}\n➭ *Profile URL* : ${data.html_url}\n➭ *Created At* : ${data.created_at}\n\n`;
-    await message.send({ url: GhUserPP }, { caption: userInfo }, "image");
-});
-
-
-System({
     pattern: "dict", 
     fromMe: isPrivate,
     desc: "to search in dictionary", 
@@ -196,18 +158,11 @@ System({
   const query = match.startsWith('-full') ? match.slice(5).trim() : match;
   const result = await getJson(IronMan(`ironman/spotify/s?query=${query}`));
   if (match.startsWith('-full')) {
-    let cap = '';
-    result.forEach(item => {
-      cap += `━━━━━━━━━━━━━━━━━━━━⬤\n
-*∘ᴛɪᴛʟᴇ:* ${item.title}\n*∘ᴀʀᴛɪꜱᴛ:* ${item.artist}\n*∘ᴅᴜʀᴀᴛɪᴏɴ:* ${item.duration}\n*∘ᴘᴏᴘᴜʟᴀʀɪᴛʏ:* ${item.popularity}\n*∘ᴜʀʟ:* ${item.url}\n*∘ᴘʀᴇᴠɪᴇᴡ:* ${item.preview}\n━━━━━━━━━━━━━━━━━━━━⬤
-\n\n`;
-    });
+    const cap = result.map(item => `━━━━━━━━━━━━━━━━━━━━⬤\n*∘ᴛɪᴛʟᴇ:* ${item.title}\n*∘ᴀʀᴛɪꜱᴛ:* ${item.artist}\n*∘ᴅᴜʀᴀᴛɪᴏɴ:* ${item.duration}\n*∘ᴘᴏᴘᴜʟᴀʀɪᴛʏ:* ${item.popularity}\n*∘ᴜʀʟ:* ${item.url}\n*∘ᴘʀᴇᴠɪᴇᴡ:* ${item.preview}\n`).join("\n");
     await message.send(cap);
   } else {
-    const fr = result[0];
-    var caption = `*ᴛɪᴛʟᴇ:* ${fr.title}\n*ᴀʀᴛɪꜱᴛ:* ${fr.artist}\n*ᴅᴜʀᴀᴛɪᴏɴ:* ${fr.duration}\n*ᴜʀʟ:* ${fr.url}\n\n*Use -full in front of query to get full results*\n_Example: .sps -full ${match}_`;
-    await message.send({ url: fr.thumbnail }, {
-      caption: caption
+    await message.send({ url: result[0].thumbnail }, {
+      caption: `*ᴛɪᴛʟᴇ:* ${result[0].title}\n*ᴀʀᴛɪꜱᴛ:* ${result[0].artist}\n*ᴅᴜʀᴀᴛɪᴏɴ:* ${result[0].duration}\n*ᴜʀʟ:* ${result[0].url}\n\n*Use -full for all results*\n_Example: .sps -full ${match}_`
     }, "image");
   }
 });
@@ -219,46 +174,16 @@ System({
   type: 'search',
 }, async (message, match, m) => {
   if (!match) return await message.reply("*Nᴇᴇᴅ ᴀɴ ᴀᴘᴘ ɴᴀᴍᴇ*\n*Example.ps WhatsApp*");
-  const query = match.startsWith('-full')? match.slice(5).trim() : match;
+  const query = match.startsWith('-full') ? match.slice(5).trim() : match;
   const result = await getJson(IronMan(`ironman/search/playstore?app=${query}`));
   if (match.startsWith('-full')) {
-    let cap = '';
-    result.forEach(item => {
-      cap += `┈──────────────────────⏣\n
-*ɴᴀᴍᴇ:* ${item.name}\n*ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${item.developer}\n*ʀᴀᴛᴇ:* ${item.rate2}\n*ʟɪɴᴋ:* ${item.link}\n┈──────────────────────⏣
-\n\n`;
-    });
+    const cap = result.map(item => `┈──────────────────────⏣\n*ɴᴀᴍᴇ:* ${item.name}\n*ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${item.developer}\n*ʀᴀᴛᴇ:* ${item.rate2}\n*ʟɪɴᴋ:* ${item.link}\n`).join("\n");
     await message.send(cap);
   } else {
-    const fr = result[0];
-    var caption = `*◦ɴᴀᴍᴇ:* ${fr.name}\n*◦𝙳𝙴𝚅𝙴𝙻𝙾𝙿𝙴𝚁:* ${fr.developer}\n*◦ʀᴀᴛᴇ:* ${fr.rate2}\n*◦ʟɪɴᴋ:* ${fr.link}\n\n*Use -full in front of query to get full results*\n_Example: .ps -full ${match}_`;
-    await message.send({ url: fr.img }, {
-      caption: caption
+    await message.send({ url: result[0].img }, {
+      caption: `*◦ɴᴀᴍᴇ:* ${result[0].name}\n*◦ᴅᴇᴠᴇʟᴏᴘᴇʀ:* ${result[0].developer}\n*◦ʀᴀᴛᴇ:* ${result[0].rate2}\n*◦ʟɪɴᴋ:* ${result[0].link}\n\n*Use -full for all results*\n_Example: .ps -full ${match}_`
     }, "image");
-  }
-});
-
-System({
-  pattern: 'tkt ?(.*)',
-  fromMe: isPrivate,
-  desc: 'TikTok Stalk',
-  type: 'search',
-}, async (message, match) => {
-  if (!match) return await message.reply("*Need a TikTok username*");
-  const response = await fetch(IronMan(`ironman/stalk/tiktok?id=${encodeURIComponent(match)}`));
-  const data = await response.json();
-  const { user, stats } = data;
-  const caption = `*⭑⭑⭑⭑ᴛɪᴋᴛᴏᴋ ꜱᴛᴀʟᴋ ʀᴇꜱᴜʟᴛ⭑⭑⭑⭑*\n\n`
-    + `*➥ᴜꜱᴇʀɴᴀᴍᴇ:* ${user.uniqueId}\n`
-    + `*➥ɴɪᴄᴋɴᴀᴍᴇ:* ${user.nickname}\n`
-    + `*➥ʙɪᴏ:* ${user.signature}\n`
-    + `*➥ᴠᴇʀɪꜰɪᴇᴅ:* ${user.verified}\n`
-    + `*➥ꜰᴏʟʟᴏᴡᴇʀꜱ:* ${stats.followerCount}\n`
-    + `*➥ꜰᴏʟʟᴏᴡɪɴɢ:* ${stats.followingCount}\n`
-    + `*➥ʜᴇᴀʀᴛꜱ:* ${stats.heartCount}\n`
-    + `*➥ᴠɪᴅᴇᴏꜱ:* ${stats.videoCount}`;
-  await message.send({ url: user.avatarLarger }, { caption }, "image");
-});
+}});
 
 System({
     pattern: 'pinimg ?(.*)',
@@ -267,26 +192,14 @@ System({
     type: 'search',
 }, async (message, match, m) => {
     if (!match) return await message.reply("*Need a query to search on Pinterest*\n_Example: .pinimg furina_\nWith count eg: .pinimg furina,5");
-    var [query, count] = match.trim().split(',').map(str => str.trim());
-    var res = await fetch(IronMan(`search/pin?query=${query}`));
-    var images = await res.json();
-    if (images.length > 0) {
-        let ri;
-        if (count && !isNaN(count)) {
-            ri = Array.from({ length: Math.min(parseInt(count), images.length) }, () => {
-                const rix = Math.floor(Math.random() * images.length);
-                return images.splice(rix, 1)[0];
-            });
-        } else {
-            ri = [images[Math.floor(Math.random() * images.length)]];
-        }
-        
-        for (const img of ri) {
-            await message.client.sendMessage(message.chat, { image: { url: img }, caption: "" }, { quoted: message });
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-    } else {
-        await message.reply("*No images found for the given query.*");
+    let [query, count] = match.trim().split(',').map(str => str.trim());
+    let images = await getJson(IronMan(`search/pin?query=${query}`));
+    if (!images.length) return await message.reply("*No images found for the given query.*");
+    count = Math.min(parseInt(count) || 1, images.length);
+    let data = Array.from({ length: count }, () => images.splice(Math.floor(Math.random() * images.length), 1)[0]);
+    for (const img of data) {
+        await message.send({ url: img }, { quoted: message }, "image");
+        await new Promise(res => setTimeout(res, 1000));
     }
 });
 
@@ -297,14 +210,10 @@ System({
   type: 'search',
 }, async (message, match, m) => {
   if (!match) return await message.reply("_Give a pinterest video *query*_\n*Example* : .pinvid furina edit");
-  var query = match.trim();
-  var res = await fetch(IronMan(`ironman/search/pinterest?q=${encodeURIComponent(query)}`));
-  var data = await res.json();
-  var vidurl = data;
-  if (vidurl.length > 0) {
-    var ri = Math.floor(Math.random() * vidurl.length);
-    var rvu = vidurl[ri];
-    await message.sendFromUrl(rvu, { quoted: message });
+  var data = await getJson(IronMan(`ironman/search/pinterest?q=${encodeURIComponent(match)}`));
+  if (data.length > 0) {
+    var random = Math.floor(Math.random() * data.length);
+    await message.sendFromUrl(data[random], { quoted: message });
   } else {
     await message.reply('No video results found');
   }
@@ -322,17 +231,17 @@ System({
     if (!res.ok) return await message.send("Error fetching lyrics. Please try again later.");
     const { title, artist, lyrics, image } = await res.json();
     const caption = `*Title:* ${title}\n*Artist:* ${artist}\n\n${lyrics}`;
-    await message.client.sendMessage(message.chat, { image: { url: image }, caption }, {quoted: message});
+    await message.send({ url: image }, { caption, quoted: message }, "image");
 });
 
 System({
-    pattern: 'telegram ?(.*)',
+    pattern: 'xsearch ?(.*)',
     fromMe: isPrivate,
-    desc: 'telegram profile details',
-    type: 'search',
+    nsfw: true,
+    type: "search",
+    desc: "Xnxx searcher"
 }, async (message, match) => {
-    if (!match) return await message.reply("*Need a username*\n_Example: .telegram @TGMovies2Bot_");
-    const { result } = await getJson(api + "stalk/telegram?query=" + match)
-    return message.reply({ url: result.profile }, { caption: `*User name :* ${result.userName}\n*Nick name :* ${result.nickName}\n*About :* ${result.about}\n*Via telegram :* ${result.telegram}`}, "image")
+    if (!match || isUrl(match)) return await message.reply('_Please provide a valid query_');
+    const data = await getJson(api + `search/xnxx?q=${encodeURIComponent(match)}`);
+    await message.send(data.result.map(item => `*💎 Title:* ${item.title}\n*🔗 Link:* ${item.link}\n\n`).join(""));
 });
-
