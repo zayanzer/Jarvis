@@ -66,23 +66,38 @@ System({
     onlyGroup: true,
     desc: 'remove users who use bot'
 }, async (message, match) => {
-    if (!match) return await message.reply("_*antilink* on/off_\n_*antilink* action warn/kick/null_");
-    const { antilink } = await getData(message.chat);
+    if (!match) return await message.reply(`_*antilink* on/off/get_\n_*antilink* action warn/kick/null_\n_*antilink:* null/whatsapp.com_`);
+    const antilink = await transformData(message.jid, "antilink");
     if(match.toLowerCase() === 'on') {
-    	const action = antilink && antilink.message ? antilink.message : 'null';
-        await setData(message.jid, action, "true", "antilink");
+    	const action = antilink && antilink.action ? antilink.action : 'null';
+        const value = antilink && antilink.allowedUrls ? antilink.allowedUrls : 'null';
+        await makeInDb(message.jid, { status: "true", action, value }, "antilink");
         return await message.send(`_antilink Activated with action null_\n_*antilink action* warn/kick/null for chaning actions_`)
     } else if(match.toLowerCase() === 'off') {
-    	const action = antilink && antilink.message ? antilink.message : 'null';
-        await setData(message.jid, action, "false", "antilink");
+    	const action = antilink && antilink.action ? antilink.action : 'null';
+        const value = antilink && antilink.allowedUrls ? antilink.allowedUrls : 'null';
+        await makeInDb(message.jid, { status: "true", action, value }, "antilink");
         return await message.send(`_antilink deactivated_`)
+    } else if(match.toLowerCase() === 'get') {
+        const withExclamation = antilink.allowedUrls.split(',').filter(item => item.startsWith('!')).join(',');
+        const withoutExclamation = antilink.allowedUrls.split(',').filter(item => !item.startsWith('!')).join(',');
+        const text = [withExclamation && `_Not Allowed URL: ${withExclamation}_`, withoutExclamation && `_Allowed urls: ${withoutExclamation}_`].filter(Boolean).join('\n');
+        return message.send(`_Antlink_\n\n_Status : ${antilink.enabled}_\n_Action: ${antilink.action}_\n` + text);
     } else if(match.toLowerCase().match('action')) {
-    	const status = antilink && antilink.status ? antilink.status : 'true';
+    	const status = antilink && antilink.enabled ? antilink.enabled : 'true';
         match = match.replace(/action/gi,'').trim();
         if(!actions.includes(match)) return await message.send('_action must be warn,kick or null_')
-        await setData(message.jid, match, status, "antilink");
-        return await message.send(`_Link Action Updated_`);
-    }
+        const value = antilink && antilink.allowedUrls ? antilink.allowedUrls : 'null';
+        await makeInDb(message.jid, { status, action: match, value }, "antilink");
+        return await message.send(`_Antilink Action Updated_`);
+    } else {
+    	const action = antilink && antilink.action ? antilink.action : 'null';
+    	const status = antilink && antilink.enabled ? antilink.enabled : 'true';
+        await makeInDb(message.jid, { status, action, value: match }, "antilink");
+	const withExclamation = match.split(',').filter(item => item.startsWith('!')).join(',');
+        const withoutExclamation = match.split(',').filter(item => !item.startsWith('!')).join(',');
+        return await message.send([withExclamation && `_Antilink Not Allowed URL updated: ${withExclamation}_`, withoutExclamation && `_Antilink allowed urls Updated to: ${withoutExclamation}_`].filter(Boolean).join('\n'));
+    };
 });
 
 System({
