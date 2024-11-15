@@ -15,6 +15,8 @@ const {
     isUrl,
     sleep,
     System,
+    getData,
+    setData,
     isPrivate,
     warnMessage,
     extractUrlsFromText
@@ -25,9 +27,9 @@ System({
     pattern: 'add ?(.*)',
     type: 'group',
     fromMe: true,
+    onlyGroup: true,
     desc: "add a person to group"
 }, async (message, match) => {
-    if (!message.isGroup) return;
     match = message.reply_message?.sender || match;
     let isadmin = await isAdmin(message, message.user.jid);
     if (!isadmin) return await message.reply("_I'm not admin_");
@@ -70,10 +72,10 @@ System({
 System({
     pattern: "kick$",
     fromMe: true,
-    desc: "Kicks a person from the group",
     type: "group",
+    onlyGroup: true,
+    desc: "Kicks a person from the group"
 }, async (message, match) => {
-    if (!message.isGroup) return await message.send("_This command is for groups_");   
     match = message.mention?.jid?.[0] || message.reply_message?.sender || match;
     if (!match) return await message.reply("_Reply to someone/mention_\n*Example:* .kick @user");    
     if (!await isAdmin(message, message.user.jid)) return await message.send("_I'm not an admin_");
@@ -96,11 +98,10 @@ System({
 System({
 	pattern: "promote$",
 	fromMe: true,
-	desc: "promote a member",
 	type: "group",
+	onlyGroup: true,
+	desc: "promote a member",
 }, async (message, match) => {
-	if (!message.isGroup)
-	return await message.send("_This command is for groups_");
 	match = message.mention.jid?.[0] || message.reply_message.sender || match
 	if (!match) return await message.reply("_Reply to someone/mention_\n*Example:* . promote @user");
 	let isadmin = await isAdmin(message, message.user.jid);
@@ -114,11 +115,10 @@ System({
 System({
 	pattern: "demote$",
 	fromMe: true,
-	desc: "demote a member",
 	type: "group",
+	onlyGroup: true,
+	desc: "demote a member",
 }, async (message, match) => {
-	if (!message.isGroup)
-	return await message.send("_This command is for groups_");
 	match = message.mention.jid?.[0] || message.reply_message.sender || match
 	if (!match) return await message.reply("_Reply to someone/mention_\n*Example:* . demote @user");
 	let isadmin = await isAdmin(message, message.user.jid);
@@ -132,10 +132,10 @@ System({
 System({
     pattern: 'invite ?(.*)',
     fromMe: true,
-    desc: "Provides the group's invitation link.",
-    type: 'group'
+    type: 'group',
+    onlyGroup: true,
+    desc: "Provides the group's invitation link."
 }, async (message) => {
-    if (!message.isGroup) return await message.reply("_This command is for groups_");
     let isadmin = await isAdmin(message, message.user.jid);
     if (!isadmin) return await message.reply("_I'm not admin_");
     const data = await message.client.groupInviteCode(message.jid);
@@ -146,11 +146,10 @@ System({
 System({
 	pattern: "mute",
 	fromMe: true,
-	desc: "nute group",
 	type: "group",
+	onlyGroup: true,
+	desc: "nute group",
 }, async (message) => {
-	if (!message.isGroup)
-	return await message.send("_This command is for groups_");
 	let isadmin = await isAdmin(message, message.user.jid);
 	if (!isadmin) return await message.reply("_I'm not admin_");
 	const mute = await message.reply("_Muting Group_");
@@ -162,11 +161,10 @@ System({
 System({
 	pattern: "unmute",
 	fromMe: true,
-	desc: "unmute group",
 	type: "group",
+	onlyGroup: true,
+	desc: "unmute group"
 }, async (message) => {
-	if (!message.isGroup)
-	return await message.send("_This command is for groups_");
 	let isadmin = await isAdmin(message, message.user.jid);
 	if (!isadmin) return await message.reply("_I'm not admin_");
 	const mute = await message.reply("_Unmuting Group_");
@@ -178,8 +176,8 @@ System({
 System({
     pattern: "tag",
     fromMe: true,
-    desc: "mention all users in the group",
     type: "group",
+    desc: "mention all users in the group"
 }, async (message, match) => {
     if (!message.isGroup) return await message.reply(`@${message.sender.split("@")[0]}`, { mentions: [message.sender] });   
     const { participants } = await message.client.groupMetadata(message.from).catch(e => {});
@@ -198,7 +196,7 @@ System({
         return await message.send(msg, { mentions: participants.map(a => a.id) });
     } 
     else if (match === "me" || match === "mee") {
-        await message.client.sendMessage(message.chat, { text: `@${message.sender.split("@")[0]}`, mentions: [message.sender] });
+        await message.send(`@${message.sender.split("@")[0]}`, { mentions: [message.sender] });
     } 
     else if (match || message.reply_message.text) {
         match = match || message.reply_message.text;
@@ -216,10 +214,10 @@ System({
 System({
     pattern: "gpp$",
     fromMe: true,
-    desc: "Set full-screen profile picture",
     type: "group",
+    onlyGroup: true,
+    desc: "Set full-screen profile picture",
 }, async (message, match) => {
-    if (!message.isGroup) return await message.send("_This command is for groups_"); 
     let isadmin = await isAdmin(message, message.user.jid);
     if (!isadmin) return await message.reply("_I'm not an admin_");
     if(match && match === "remove") {
@@ -235,11 +233,10 @@ System({
 System({
     pattern: 'revoke ?(.*)',
     fromMe: true,
+    type: 'group',
+    onlyGroup: true,
     desc: "Revoke Group invite link.",
-    type: 'group'
 }, async (message) => {
-    if (!message.isGroup)
-    return await message.reply("_This command is for groups_");
     let isadmin = await isAdmin(message, message.user.jid);
     if (!isadmin) return await message.reply("_I'm not admin_");
     await message.client.groupRevokeInvite(message.jid)
@@ -267,22 +264,22 @@ System({
 });
 
 System({
-	pattern: 'left ?(.*)',
-	fromMe: true,
-	desc: 'Left from group',
-	type: 'group'
+    pattern: 'left ?(.*)',
+    fromMe: true,
+    type: 'group',
+    onlyGroup: true,
+    desc: 'Left from group'
 }, async (message) => {
-    if (!message.isGroup) return await message.reply("_This command is for groups_");
     await message.client.groupLeave(message.jid);
 });
 
 System({
     pattern: 'lock ?(.*)',
     fromMe: true,
+    type: 'group',
+    onlyGroup: true,
     desc: "only allow admins to modify the group's settings",
-    type: 'group'
 }, async (message, match) => {
-    if (!message.isGroup) return await message.reply("_This command is for groups_");
     let isadmin = await isAdmin(message, message.user.jid);
     if (!isadmin) return await message.reply("_I'm not admin_");
     const meta = await message.client.groupMetadata(message.chat)
@@ -294,15 +291,15 @@ System({
 System({
     pattern: 'unlock ?(.*)',
     fromMe: true,
+    type: 'group',	
+    onlyGroup: true,
     desc: "allow everyone to modify the group's settings -- like display picture etc.",
-    type: 'group'
 }, async (message, match) => {
-    if (!message.isGroup) return await message.reply("_This command is for groups_");
     let isadmin = await isAdmin(message, message.user.jid);
     if (!isadmin) return await message.reply("_bot not admin_");
     const meta = await message.client.groupMetadata(message.jid);
     if (!meta.restrict) return await message.send("_Already everyone can modify group settings_")
-    await message.client.groupSettingUpdate(message.jid, 'unlocked')
+    await messages.client.groupSettingUpdate(message.jid, 'unlocked')
     return await message.send("*Everyone can modify group settings*")
 });
 
@@ -310,10 +307,10 @@ System({
 System({
 	pattern: 'gname ?(.*)',
 	fromMe: true,
+	type: 'group',
+	onlyGroup: true,
 	desc: "To change the group's subject",
-	type: 'group'
 }, async (message, match, m, client) => {
-    if(!message.isGroup) return;
 	match = match || message.reply_message.text
 	if (!match) return await message.reply('*Need Subject!*\n*Example: gname New Subject!*.')
 	const meta = await message.client.groupMetadata(message.chat);
@@ -330,11 +327,11 @@ System({
 System({
     pattern: 'gdesc ?(.*)',
     fromMe: true,
+    type: 'group',
+    onlyGroup: true,
     desc: "To change the group's description",
-    type: 'group'
 }, async (message, match, client) => {
     match = match || message.reply_message.text
-    if (!message.isGroup) return await message.reply("_This command is for groups_");
     if (!match) return await message.reply('*Need Description!*\n*Example: gdesc New Description!*.')
     const meta = await message.client.groupMetadata(message.jid);
     if (!meta.restrict) {
@@ -350,8 +347,8 @@ System({
 System({
     pattern: 'gjid ?(.*)',
     fromMe: true,
-    desc: "To get group jid",
-    type: 'group'
+    type: 'group',
+    desc: "To get group jid"
 }, async (message, match) => {
     match = match || message.reply_message.text;
     if (!message.isGroup || match === "info") return message.send(`*All Group Jid*\n${await getAllGroups(message.client)}`);    
@@ -367,10 +364,11 @@ System({
 System({
     pattern: 'ginfo ?(.*)',
     fromMe: true,
+    type: 'group',
     desc: 'Shows group invite info',
-    type: 'group'
 }, async (message, match) => {
     match = (await extractUrlsFromText(match || message.reply_message.text))[0];
+    if(!match && message.isGroup) match = `https://chat.whatsapp.com/${await message.client.groupInviteCode(message.jid)}`;
     if (!match) return await message.reply('*Need Group Link*\n_Example : ginfo group link_')
     const [link, invite] = match.match(/chat.whatsapp.com\/([0-9A-Za-z]{20,24})/i) || []
     if (!invite) return await message.reply('*Invalid invite link*')
@@ -395,10 +393,10 @@ System({
 System({
 	pattern: "warn",
 	fromMe: true,
-	desc: "Warn a user",
 	type: "group",
+	onlyGroup: true,
+	desc: "Warn a user",
 }, async (message, match) => {
-	if(!message.isGroup) return;
         let user = message.mention.jid?.[0] || message.reply_message.sender;
 	if (!user) return message.reply("_Reply to someone/mention_\n*Example:* . warn @user\n_To reset warn_\n*Example:* .warn reset");
 	const jid = parsedJid(user);
@@ -407,16 +405,16 @@ System({
 	let userIsAdmin = await isAdmin(message, user);
 	if(userIsAdmin) return await message.send(`_user is admin @${jid[0].split("@")[0]}_`, { mentions: jid });
 	const name = await message.store.getName(user);
-        await warnMessage(message, match, user, name);
+       await warnMessage(message, match, user, name);
 });
 
 System({
     pattern: "inactive", 
     fromMe: isPrivate,
-    desc: "To check inactive users in group", 
     type: "group",
+    onlyGroup: true,
+    desc: "To check inactive users in group", 
 }, async (message, match) => {
-    if (!message.isGroup) return message.reply("_*This command is for groups only.*_");
     const data = await message.store.groupStatus(message.chat, "disactive");
     let inactiveUsers = Array.isArray(data) ? `*Total Inactive Users ${data.length}*\n\n` + data.map((item, index) => `*${index + 1}. User: @${item.jid.split("@")[0]}*\n*Role: ${item.role}*\n\n`).join("") : "_*No inactive users found.*_";
     return await message.send(inactiveUsers.trim(), { mentions: data.map(a => a.jid) || [] });
@@ -425,10 +423,10 @@ System({
 System({
     pattern: "active", 
     fromMe: isPrivate,
-    desc: "To check active users in group", 
     type: "group",
+    onlyGroup: true,
+    desc: "To check active users in group", 
 }, async (message, match) => {
-    if (!message.isGroup) return message.reply("_*This command is for groups only.*_");
     const data = await message.store.groupStatus(message.jid, "active");
     let activeUsers = Array.isArray(data) ? `*Total Active Users ${data.length}*\n\n` + data.map(item => `*Name: ${item.pushName}*\n*Number: ${item.jid.split("@")[0]}*\n*Total Messages: ${item.messageCount}*\n\n`).join("") : "_*No active users found.*_";
     return await message.client.sendButton(message.jid, { buttons:[{ name: "quick_reply", display_text: "Inactive users", id: "inactive" }], body: "", footer: "\n*JARVIS-MD*", title: activeUsers.trim() });
@@ -437,11 +435,11 @@ System({
 System({
     pattern: "vote",
     fromMe: isPrivate,
-    desc: "to send a vote message",
     type: "group",
+    onlyGroup: true,
+    desc: "to send a vote message"
 }, async (message, match) => {
     let formattedResult;
-    if (!message.isGroup) return message.reply("_*This command is for groups only.*_");
     if (!match) return message.reply("*Hey, where's the vote text?* Or you can use: _'vote result'_ or _'vote get'_ to get the result of a vote, _'vote delete'_ to delete a vote message, or _'vote What's your favorite color?;😂|Blue,😟|Red'_ to create a vote.");
     if (match === "delete") {
     if (!message.quoted) return message.reply("_*Reply to a vote message*_");
@@ -470,47 +468,79 @@ System({
 });
 
 System({
+    pattern: "automute ?(.*)",
+    fromMe: true,
+    desc: "auto mute groups",
+    type: 'manage',
+    onlyGroup: true,
+}, async (message, match) => {
+   match = match?.toUpperCase();
+   const { autoMute } = await getData(message.chat);
+   const action = autoMute && autoMute.message ? autoMute.message : 'null';
+   if (!match) return await message.send("*Wrong format!*\n *.automute 10:00 PM*\n *.automute 06:00 AM*\n *.automute off*");
+   if (match.toLowerCase() === "off") {
+      await setData(message.jid, action, "false", "autoMute");
+      return await message.send("*Automute has been disabled in this group ❗*");       
+   } else if (match.toLowerCase() === "on") {
+      await setData(message.jid, action, "true", "autoMute");
+      return await message.send("*Automute has been enabled in this group ✅*");       
+   };
+   var admin = await isAdmin(message, message.user.jid);
+   if (!admin) return await message.send("_I'm not an admin_");
+   await setData(message.jid, match, "true", "autoMute");
+   await message.send(`*_Group will auto mute at ${match}, rebooting.._*`)
+   require('pm2').restart('index.js');
+});
+
+System({
+    pattern: "autounmute ?(.*)",
+    fromMe: true,
+    desc: "auto mute groups",
+    type: 'manage',
+    onlyGroup: true
+}, async (message, match) => {
+   match = match?.toUpperCase();
+   const { autoUnmute } = await getData(message.chat);
+   const action = autoUnmute && autoUnmute.message ? autoUnmute.message : 'null';
+   if (!match) return await message.send("*Wrong format!*\n *.autounmute 10:00 PM*\n *.autounmute 06:00 AM*\n *.autounmute off*");
+   if (match.toLowerCase() === "off") {
+      await setData(message.jid, action, "false", "autoUnmute");
+      return await message.send("*Autounmute has been disabled in this group ❗*");       
+   } else if (match.toLowerCase() === "on") {
+      await setData(message.jid, action, "true", "autoUnmute");
+      return await message.send("*Autounmute has been enabled in this group ✅*");       
+   };
+   var admin = await isAdmin(message, message.user.jid);
+   if (!admin) return await message.send("_I'm not an admin_");
+   await setData(message.jid, match, "true", "autoUnmute");
+   await message.send(`*_Group will auto unmute at ${match}, rebooting.._*`)
+   require('pm2').restart('index.js');
+});
+
+System({
+    pattern: "getmute ?(.*)",
+    fromMe: true,
+    desc: "mute/unmute group info",
+    type: 'manage',
+    onlyGroup: true
+}, async (message, match) => {
+   const { autoMute, autoUnmute } = await getData(message.jid);
+   if ((!autoMute || autoMute.status === "false") && (!autoUnmute || autoUnmute.status === "false")) return message.reply("*Auto mute and Auto unmute not set yet*");
+   let msg = [autoMute?.status === "true" ? `*⬦ Auto Mute Set As:* ${autoMute.message}` : "", autoUnmute?.status === "true" ? `*⬦ Auto Unmute Set As:* ${autoUnmute.message}` : ""].filter(Boolean).join("\n");
+   return message.reply("*Scheduled Mutes/Unmutes*\n\n" + msg);
+});
+
+System({
   pattern: 'getinfo',
   fromMe: isPrivate,
-  desc: 'Get group info',
   type: 'group',
+  onlyGroup: true,
+  desc: 'Get group info'
 }, async (message, match, m) => {
-  if (!message.isGroup) {
-    return await message.reply('*This command only works in groups baka!*');
-  }
-  const ppUrl = await message.client.profilePictureUrl(message.chat, 'image');
+  const ppUrl = await message.getPP(message.chat);
   const metadata = await message.client.groupMetadata(message.chat);
-  const admins = metadata.participants
-    .filter(participant => participant.admin === 'admin')
-    .map(admin => admin.id.split('@')[0]);
-  const validMetadata = {
-    id: metadata.id,
-    subject: metadata.subject,
-    subjectOwner: metadata.subjectOwner ? metadata.subjectOwner.split('@')[0] : 'Not defined',
-    subjectTime: metadata.subjectTime,
-    size: metadata.size,
-    creation: metadata.creation,
-    owner: metadata.owner || 'Not defined',
-    desc: metadata.desc || 'No description',
-    restrict: metadata.restrict,
-    announce: metadata.announce,
-    isCommunity: metadata.isCommunity,
-    isCommunityAnnounce: metadata.isCommunityAnnounce,
-    joinApprovalMode: metadata.joinApprovalMode,
-    memberAddMode: metadata.memberAddMode,
-    participants: metadata.participants
-  };
-  let caption = `\`\`\`
-━━━───𝗚𝗥𝗢𝗨𝗣 𝗜𝗡𝗙𝗢───━━━
-𝗡𝗔𝗠𝗘: ${validMetadata.subject}
-𝗖𝗥𝗘𝗔𝗧𝗘𝗗 𝗢𝗡: ${new Date(validMetadata.creation * 1000).toLocaleString()}
-𝗦𝗜𝗭𝗘: ${validMetadata.size} MEMBERS
-𝗦𝗨𝗕𝗝𝗘𝗖𝗧 𝗢𝗪𝗡𝗘𝗥: ${validMetadata.subjectOwner}
-𝗢𝗪𝗡𝗘𝗥: ${validMetadata.owner}
-𝗗𝗘𝗦𝗖𝗥𝗜𝗣𝗧𝗜𝗢𝗡: ${validMetadata.desc}
-𝗝𝗢𝗜𝗡 𝗔𝗣𝗣𝗥𝗢𝗩𝗔𝗟: ${validMetadata.joinApprovalMode ? 'ENABLED' : 'DISABLED'}
-𝗔𝗡𝗡𝗢𝗨𝗡𝗖𝗘𝗠𝗘𝗡𝗧: ${validMetadata.announce ? 'YES' : 'NO'}
-𝗔𝗗𝗠𝗜𝗡𝗦: ${admins.join(', ')}
-\`\`\``;
- await message.client.sendMessage(message.chat, { image: { url: ppUrl }, caption: caption });
+  const admins = metadata.participants.filter(p => p.admin === 'admin').map(a => a.id.split('@')[0]);
+  const { subject, subjectOwner, creation, size, owner, desc, announce, joinApprovalMode } = metadata;
+  const caption = `━━━───𝗚𝗥𝗢𝗨𝗣 𝗜𝗡𝗙𝗢───━━━\n𝗡𝗔𝗠𝗘: ${subject}\n𝗖𝗥𝗘𝗔𝗧𝗘𝗗 𝗢𝗡: ${new Date(creation * 1000).toLocaleString()}\n𝗦𝗜𝗭𝗘: ${size} MEMBERS\n𝗦𝗨𝗕𝗝𝗘𝗖𝗧 𝗢𝗪𝗡𝗘𝗥: ${subjectOwner ? subjectOwner.split('@')[0] : 'Not defined'}\n𝗢𝗪𝗡𝗘𝗥: ${owner || 'Not defined'}\n𝗗𝗘𝗦𝗖𝗥𝗜𝗣𝗧𝗜𝗢𝗡: ${desc || 'No description'}\n𝗝𝗢𝗜𝗡 𝗔𝗣𝗣𝗥𝗢𝗩𝗔𝗟: ${joinApprovalMode ? 'ENABLED' : 'DISABLED'}\n𝗔𝗡𝗡𝗢𝗨𝗡𝗖𝗘𝗠𝗘𝗡𝗧: ${announce ? 'YES' : 'NO'}\n𝗔𝗗𝗠𝗜𝗡𝗦: ${admins.join(', ')}`;
+  await message.reply({ url: ppUrl }, { caption }, 'image');
 });
