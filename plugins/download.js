@@ -255,10 +255,10 @@ System({
   if (!link) return await message.reply("_Give a spotify *Url*_");
   if (!link.includes('https://open.spotify.com')) return await message.reply("_Need a Spotify URL_");
     const data = await getJson(IronMan(`ironman/dl/spotify?link=${link}`));
-    const lnk = data.download;
-    const cover = data.cover_url;
-    const artist = data.artist;
-    const title = data.title;
+    const lnk = data.link;
+    const cover = data.metadata.cover;
+    const artist = data.metadata.artists;
+    const title = data.metadata.title;
     const q = await message.send(`_*Downloading ${title}...*_`);
     const img = await getBuffer(cover);
     const aud = await getBuffer(lnk);
@@ -272,7 +272,7 @@ System({
           thumbnail: img,
           mediaType: 1,
           mediaUrl: '',
-          sourceUrl: 'https://github.com/Loki-Xer/Jarvis',
+          sourceUrl: 'https://github.com/Loki-Xer/Jarvis-md',
           showAdAttribution: true,
           renderLargerThumbnail: true
         }
@@ -307,5 +307,24 @@ System({
     if (!data || data.length === 0) return await message.reply("*No content found at the provided URL*");
     for (const imageUrl of data) {
         if (imageUrl) await message.sendFromUrl(imageUrl.url, { quoted: message.data });
+    }
+});
+
+System({
+	pattern: 'xnxx ?(.*)',
+	fromMe: true,
+    nsfw: true,
+	type: "download",
+    desc: "xnxx downloader",
+}, async (message, match) => {
+    match = match || message.reply_message.text;
+    if(isUrl(match)) {
+        let url = (await extractUrlsFromText(match))[0];
+        const { result } = await getJson(api + `download/xnxx?url=${url}`);
+        await message.sendFromUrl(result.files.high, { caption: "👅💦" });
+    } else {
+        let url = await getJson(api + `search/xnxx?q=${match}`); 
+        const { result } = await getJson(api + `download/xnxx?url=${url.result[0].link}`);
+        await message.sendFromUrl(result.files.high, { caption: "👅💦" });
     }
 });
