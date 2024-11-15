@@ -76,11 +76,12 @@ System({
     } else if(match.toLowerCase() === 'off') {
     	const action = antilink && antilink.action ? antilink.action : 'null';
         const value = antilink && antilink.allowedUrls ? antilink.allowedUrls : 'null';
-        await makeInDb(message.jid, { status: "true", action, value }, "antilink");
+        await makeInDb(message.jid, { status: "false", action, value }, "antilink");
         return await message.send(`_antilink deactivated_`)
     } else if(match.toLowerCase() === 'get') {
-        const withExclamation = antilink.allowedUrls.split(',').filter(item => item.startsWith('!')).join(',');
-        const withoutExclamation = antilink.allowedUrls.split(',').filter(item => !item.startsWith('!')).join(',');
+	const allowedUrls = antilink && antilink.allowedUrls ? antilink.allowedUrls : 'null';
+        const withExclamation = allowedUrls.split(',').filter(item => item.startsWith('!')).join(',');
+        const withoutExclamation = allowedUrls.split(',').filter(item => !item.startsWith('!')).join(',');
         const text = [withExclamation && `_Not Allowed URL: ${withExclamation}_`, withoutExclamation && `_Allowed urls: ${withoutExclamation}_`].filter(Boolean).join('\n');
         return message.send(`_Antlink_\n\n_Status : ${antilink.enabled}_\n_Action: ${antilink.action}_\n` + text);
     } else if(match.toLowerCase().match('action')) {
