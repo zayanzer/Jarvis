@@ -313,9 +313,9 @@ System({
 System({
 	pattern: 'xnxx ?(.*)',
 	fromMe: true,
-    nsfw: true,
+        nsfw: true,
 	type: "download",
-    desc: "xnxx downloader",
+        desc: "xnxx downloader",
 }, async (message, match) => {
     match = match || message.reply_message.text;
     if(isUrl(match)) {
