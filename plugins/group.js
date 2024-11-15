@@ -420,6 +420,7 @@ System({
     return await message.send(inactiveUsers.trim(), { mentions: data.map(a => a.jid) || [] });
 });
 
+
 System({
     pattern: "active", 
     fromMe: isPrivate,
@@ -429,8 +430,9 @@ System({
 }, async (message, match) => {
     const data = await message.store.groupStatus(message.jid, "active");
     let activeUsers = Array.isArray(data) ? `*Total Active Users ${data.length}*\n\n` + data.map(item => `*Name: ${item.pushName}*\n*Number: ${item.jid.split("@")[0]}*\n*Total Messages: ${item.messageCount}*\n\n`).join("") : "_*No active users found.*_";
-    return await message.client.sendButton(message.jid, { buttons:[{ name: "quick_reply", display_text: "Inactive users", id: "inactive" }], body: "", footer: "\n*JARVIS-MD*", title: activeUsers.trim() });
+    return await message.client.sendMessage(message.jid, { text: activeUsers.trim() });
 });
+
 
 System({
     pattern: "vote",
@@ -448,7 +450,7 @@ System({
       await message.send({ key: message.reply_message.data.key }, {}, 'delete');
       await message.reply("*Vote message successfully deleted*");
     } else if (match === "result" || match === "get") {
-      if (!message.quoted) return message.reply("_*Reply to a vote message*_");
+      if (!message.quoted) return message.reply(_");
       const data = await Vote(message, {}, "result");
       if (!data) return message.reply("*It's not a vote message or it's patched*");
       if (data.result.length === 0) {
