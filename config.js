@@ -20,6 +20,8 @@ module.exports = {
   PM_BLOCKER_MSG: process.env.PM_BLOCKER_MSG || "```Pm blocker active on this chat!!```",
   AUDIO_DATA: process.env.AUDIO_DATA || 'ʟᴏᴋɪ-xᴇʀ;ᴊᴀʀᴠɪꜱ;https://graph.org/file/58ea74675af7836579a3a.jpg',
   WARN_COUNT: process.env.WARN_COUNT || '3',
+  AUTOMUTE_MSG: process.env.AUTOMUTE_MSG || '_Group automuted!_',
+  AUTOUNMUTE_MSG: process.env.AUTOUNMUTE_MSG || '_Group autounmuted!_',
   ANTILINK_MSG: process.env.ANTILINK_MSG || "```Link Not allowed in this group!!```",
   ANTIBOT_MSG: process.env.ANTIBOT_MSG || "```Antibot deleted successfully!!```",
   ANTIWORD_MSG: process.env.ANTIWORD_MSG || "```Antiword deleted successfully!!```",
@@ -62,5 +64,6 @@ module.exports = {
   HEROKU_API_KEY: process.env.HEROKU_API_KEY || '',
   BOT_INFO: process.env.BOT_INFO || 'ᴊᴀʀᴠɪꜱ;ʟᴏᴋɪ-xᴇʀ;https://graph.org/file/1506e5842805b0968c5cf.mp4',
   WORK_TYPE: process.env.WORK_TYPE || 'public',
+  NSFW: toBool(process.env.NSFW || "false"),
   DATABASE: DATABASE_URL === "./database.db" ? new Sequelize({ dialect: "sqlite", storage: DATABASE_URL, logging: false }) : new Sequelize(DATABASE_URL, {dialect: "postgres", ssl: true, protocol: "postgres", dialectOptions: { native: true, ssl: { require: true, rejectUnauthorized: false },}, logging: false }),
 };
