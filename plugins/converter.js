@@ -311,7 +311,7 @@ System({
   const rtype = match ? match.toLowerCase() : '';
   if (!rmap.hasOwnProperty(rtype)) return await message.reply('*Need rotation type.*\n_Example: .rotate left, right, vertical, or horizontal_');
   const option = rmap[rtype];
-  const url = await makeUrl(await message.reply_message.downloadAndSave(), { 'User-Agent': 'Jarvis' });
+  var url = await makeUrl(await message.reply_message.downloadAndSave(), { 'User-Agent': 'Jarvis' });
   await message.sendFromUrl(IronMan(`ironman/convert/rotate?image=${url}&option=${option}`));
 });
 
@@ -348,12 +348,12 @@ System({
     }
     if (!m.image && !m.reply_message.image) return m.reply("*Reply to an image*");
     const db = await getData(m.user.id);
-    if (!db.removeBg) return await m.client.sendButton(m.jid, { image: { url: "https://graph.org/file/dc22fb232b0092e6326ec.png" }, buttons: [{ name: "cta_url", display_text: "Sign in", url: "https://accounts.kaleido.ai/users/sign_in", merchant_url: "https://accounts.kaleido.ai/users/sign_in", action: "url", icon: "", style: "link" }, { name: "cta_url", display_text: "Get API Key", url: "https://www.remove.bg/dashboard#api-key", merchant_url: "https://www.remove.bg/dashboard#api-key", action: "url", icon: "", style: "link" }], body: "", footer: "*JARVIS-MD*", title: `\nDear user, get an API key to use this command. Sign in to remove.bg and get an API key. After that, use \n\n *${m.prefix} rbg key: _your API key_*\n` });
+    if (!db.removeBg) return m.reply(`*Dear user, get an API key to use this command. Sign in to remove.bg and get an API key. After that, use* \n\n *${m.prefix} rbg key: _your API key_* \n\n Sign in here: https://www.remove.bg/dashboard#api-key`);
+    
     let buff = await removeBg(await m.downloadAndSaveMediaMessage(m.image ? m.msg : m.quoted ? m.reply_message.msg : null), db.removeBg.message);
     if(!buff) return m.reply("*Error in api key or can't upload to remove.bg*");
     await m.reply(buff, {}, "image");
 });
-
 
 System({
     pattern: "trim",
