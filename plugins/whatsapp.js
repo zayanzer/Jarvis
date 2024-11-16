@@ -324,7 +324,7 @@ System({
 
 System({
     pattern: 'msgpin ?(.*)',
-    fromMe: isPrivate,
+    fromMe: true,
     desc: 'pin a message in chat',
     type: 'whatsapp',
 }, async (message, match, m) => {
