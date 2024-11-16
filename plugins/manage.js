@@ -199,6 +199,24 @@ System({
 });
 
 System({
+    pattern: "pdm",
+    fromMe: true,
+    type: "manage",
+    onlyGroup: true,
+    desc: "To get info about promot and demote"
+}, async (message, match) => {
+    if (match === "on") { 
+      const pdm = await setData(message.jid, "active", "true", "pdm");
+      return await message.send("_*activated*_");
+    } else if (match === "off") {
+      const pdm = await setData(message.jid, "disactive", "false", "pdm");
+      return await message.send("_*deactivated*_");
+    } else {
+       await message.send("\n*Choose a setting to pdm settings*\n", { values: [{ displayText: "*on*", id: "pdm on" }, { displayText: "*off*", id: "pdm off" }], withPrefix: true, participates: [message.sender] }, "poll");
+    };
+});
+
+System({
     pattern: "antidelete",
     fromMe: true,
     type: "manage",
