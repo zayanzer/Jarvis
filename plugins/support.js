@@ -32,8 +32,8 @@ System({
     desc: "To get all plugin of jarvis-md",
     type: "support"
 }, async (message) => {
-    const allPluginsData = await getJson('https://api-loki-ser-1o2h.onrender.com/api/jarvis/allplugin');
-    const externalPluginsData = await getJson('https://api-loki-ser-1o2h.onrender.com/api/jarvis/plugin');
+    const allPluginsData = await getJson(api + 'bot/plugin?query=allplugin');
+    const externalPluginsData = await getJson(api + 'bot/plugin?query=pluginlist');
     const formatPluginData = (pluginData) => {
         return Object.entries(pluginData).map(([key, value]) => `*${key}:* ${value.url}`).join('\n\n');
     };
