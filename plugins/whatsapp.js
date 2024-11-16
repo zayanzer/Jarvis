@@ -321,3 +321,20 @@ System({
 	await message.client.updateGroupsAddPrivacy(match)
 	await message.send(`_Privacy Updated to *${match}*_`);
 });
+
+System({
+    pattern: 'msgpin ?(.*)',
+    fromMe: isPrivate,
+    desc: 'pin a message in chat',
+    type: 'whatsapp',
+}, async (message, match, m) => {
+    if (!message.reply_message || !match) return await message.reply(`_Reply to a message to pin it_\n\n*Example*: _msgpin 24 =for pin msg for 24 hour_\n _msgpin 7 = for pin msg for 7days_\n _msgpin 30 = for pin msg for 30 days_`);
+    var fek = { '24': 86400, '7': 604800, '30': 2592000 };
+    var time = fek[match];
+    if (!time) return await message.reply(`_Reply to a message to pin it_\n\n*Example*: _msgpin 24 =for pin msg for 24 hour_\n _msgpin 7 = for pin msg for 7days_\n _msgpin 30 = for pin msg for 30 days_`);
+    await message.client.sendMessage(m.jid, {
+        pin: await message.reply_message.data.key,
+        type: 1,
+        time
+    });
+});
