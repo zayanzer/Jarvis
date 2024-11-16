@@ -6,7 +6,7 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-const { System } = require("../lib");
+const { System, setData } = require("../lib");
 const { parsedJid } = require("./client/");
 
 System({
@@ -15,8 +15,7 @@ System({
     desc: "Set profile picture",
     type: "whatsapp",
 }, async (message) => {
-    if (!message.reply_message || !message.reply_message.image)
-        return await message.reply("_Reply to a photo__");
+    if (!message.reply_message || !message.reply_message.image) return await message.reply("_Reply to a photo__");
     let buff = await message.reply_message.download();
     await message.setPP(message.user.jid, buff);
     return await message.reply("_Profile Picture Updated__");
@@ -56,6 +55,24 @@ System({
 }, async (message) => {
     if (!message.quoted) return await message.reply("_Reply to a message to delete it!_");
     await message.client.sendMessage(message.chat, { delete: message.reply_message.data.key });
+});
+
+System({
+    pattern: "antiviewones",
+    fromMe: true,
+    desc: "To get info about promot and demote",
+    type: "manage",
+}, async (message, match) => {
+    if (match === "on") { 
+      const antiviewones = await setData(message.user.id, "active", "true", "antiviewones");
+      return await message.send("_*activated*_");
+    } else if (match === "off") {
+      const antiviewones = await setData(message.user.id, "disactive", "false", "antiviewones");
+      return await message.send("_*deactivated*_");
+    } else {
+      if (!message.isGroup) return message.send("_*antiviewones on/off*_");
+      await message.send("\n*Choose a a settings to on/off antiviewones*\n",{ values: [{ displayText: "*on*", id: "antiviewones on" }, { displayText: "*off*", id: "antiviewones off" }], withPrefix: true, participates: [message.sender] }, "poll");
+    };
 });
 
 System({
