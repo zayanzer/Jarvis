@@ -1,4 +1,6 @@
 const { client, config } = require("./lib/");
+const { client, config } = require("./lib/");
+
 
 const databaseSync = async () => {
   try {
@@ -9,18 +11,14 @@ const databaseSync = async () => {
     process.exit(1);
   }
 };
-
+const start = async () => {
 const start = async () => {
     try {
+    try {
+        await config.DATABASE.sync();
         await databaseSync();
         const Client = new client();
+        const Client = new client();
+        Client.log("starting client...");
         Client.log("starting client...");
         await Client.startServer();
-        await Client.WriteSession();
-        await Client.WaConnect();
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-start();
