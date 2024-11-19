@@ -3,7 +3,7 @@ const { System, isPrivate, extractUrlsFromText, sleep, getJson, config, isUrl, I
 
 System({
     pattern: "ts ?(.*)",
-    fromMe: true,
+    fromMe: isPrivate,
     desc: "Download Sticker From Telegram",
     type: "download",
 },
@@ -66,7 +66,7 @@ System({
 
 System({
     pattern: 'insta ?(.*)',
-    fromMe: true,
+    fromMe: isPrivate,
     desc: 'instagram downloader',
     type: 'download',
 }, async (message, match) => {
@@ -295,7 +295,7 @@ System({
 
 System({
     pattern: 'snap ?(.*)',
-    fromMe: true,
+    fromMe: isPrivate,
     desc: 'snap downloader',
     type: 'download',
 }, async (message, match) => {
@@ -312,7 +312,7 @@ System({
 
 System({
 	pattern: 'xnxx ?(.*)',
-	fromMe: true,
+	fromMe: isPrivate,
         nsfw: true,
 	type: "download",
         desc: "xnxx downloader",
