@@ -54,6 +54,7 @@ module.exports = {
   MEDIA_DATA: process.env.MEDIA_DATA|| 'ʟɪꜱᴛ ᴍᴇɴᴜ;ᴊᴀʀᴠɪꜱ-ᴍᴅ;https://graph.org/file/58ea74675af7836579a3a.jpg',
   MENU_FONT: process.env.MENU_FONT || "0;0",
   SUDO: process.env.SUDO || '',
+  CMD_REACTION: toBool(process.env.CMD_REACTION || 'false'),
   TIMEZONE: process.env.TIMEZONE || "Asia/Kolkata",
   STARTING_MSG: toBool(process.env.STARTING_MSG) || true,
   STATUS_REACTION_EMOJI: process.env.STATUS_REACTION_EMOJI || "🍉,🍓",
