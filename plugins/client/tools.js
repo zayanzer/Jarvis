@@ -38,9 +38,32 @@ function timeConvert(time) {
   return time.join(''). replace(" ",":");
 }
 
+function formatDateTime(dateTime) {
+  const regex = /^(\d{2}:\d{2}\s?(AM|PM))\s(\d{2})-(\d{2})-(\d{4})$/i;
+  if (regex.test(dateTime)) {
+    const [, time, period, day, month, year] = dateTime.match(regex);
+    return `${time} ${period.toUpperCase()}/${year}-${month}-${day}`;
+  } else {
+    return false;
+  }
+}
+
+function reformatDateTime(dateTime) {
+  dateTime = dateTime.replace(/\s+(AM|PM)\s+(AM|PM)/i, ' $1').trim();
+  const regex = /^(\d{2}:\d{2}\s?(AM|PM))\/(\d{4})-(\d{2})-(\d{2})$/i;
+  if (regex.test(dateTime)) {
+    const [, time, period, year, month, day] = dateTime.match(regex);
+    return `${time} ${period.toUpperCase()} ${day}-${month}-${year}`;
+  } else {
+    return false;
+  }
+}
+
 module.exports = {
   getUptime,
   Runtime,
   secondsToHms,
-  timeConvert
+  timeConvert,
+  formatDateTime,
+  reformatDateTime
 }
