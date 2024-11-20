@@ -9,11 +9,11 @@ System({
     type: 'schedule'
 }, async (message, match) => {
     if (!message.quoted) return await message.send('*Reply to a Message, which is scheduled to send*');
-    if (!match.includes(',')) return message.reply("-> *Example :*\n*setschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*");    
+    if (!match.includes(',')) return message.reply("-> *Example :*\n*setschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n-> *Example :.setschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*");    
     const [id, time] = match.split(',')
     const [jid] = await parsedJid(id);
     const newFormat = formatDateTime(time.trim());
-    if (!jid || !newFormat) return message.reply("-> *Example :*\n*setschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*"); 
+    if (!jid || !newFormat) return message.reply("-> *Example :*\n*setschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n-> *Example :.setschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*"); 
     await setSchedule(jid, newFormat, "true", message.reply_message.message);
     await message.send(`_successfully scheduled to send at ${time}_`);
     require('pm2').restart('index.js');
@@ -42,12 +42,12 @@ System({
     desc: 'To delete Schedule Message',
     type: 'schedule'
 }, async (message, match) => {
-    if (!match) return message.reply("-> *Example :*\n*delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR* "); 
-    if (!match.includes(',')) return message.reply("-> *Example :*\n*setschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*");    
+    if (!match) return message.reply("-> *Example : delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n->*.delschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*"); 
+    if (!match.includes(',')) return message.reply("-> *Example : delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n->*.delschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*");    
     const [id, time] = match.split(',')
     const [jid] = await parsedJid(id);
     const newFormat = formatDateTime(time);
-    if (!jid || !newFormat) return message.reply("-> *Example :*\n*delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*");
+    if (!jid || !newFormat) return message.reply("-> *Example : delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n->*.delschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*");
     const schedule = await delSchedule(jid, newFormat);
     if(!schedule.status) return await message.send('_Schedule not found_');
     return await message.send('_Schedule deleted_');
