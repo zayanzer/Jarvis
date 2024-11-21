@@ -26,9 +26,11 @@ const parseJid = function(text = "") {
   );
 };
 
-const parsedJid = function(text) {
-  return text.match(/[0-9]+(-[0-9]+|)@(g.us|s.whatsapp.net)/g);
+const parsedJid = function (text) {
+  const matches = text.match(/[0-9]+(-[0-9]+|)@(g.us|s.whatsapp.net)/g);
+  return matches ? matches : [];
 };
+
 
 module.exports = {
   isAdmin,
