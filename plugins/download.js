@@ -318,6 +318,7 @@ System({
         desc: "xnxx downloader",
 }, async (message, match) => {
     match = match || message.reply_message.text;
+    if(!match) return await message.reply("_*need a query*_");
     if(isUrl(match)) {
         let url = (await extractUrlsFromText(match))[0];
         const { result } = await getJson(api + `download/xnxx?url=${url}`);
