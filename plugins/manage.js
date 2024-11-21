@@ -278,7 +278,6 @@ System({
     pattern: "antidelete",
     fromMe: true,
     type: "manage",
-    onlyGroup: true,
     desc: "Manage anti-delete settings",
 }, async (message, match) => {
 	if(!match) return await message.reply(`*To Update Antidelete Settings*\n\n${message.prefix} *Antidelete On.* - \`\`\`Enable Antidelete\`\`\` \n${message.prefix} *Antidelete Off.* - \`\`\`Disable Antidelete\`\`\` \n\n${message.prefix} *Antidelete Only/PM.* - \`\`\`Activate Antidelete for private messages only.\`\`\` \n${message.prefix} *Antidelete Only/Group.* - \`\`\`Activate Antidelete for group messages only.\`\`\` \n${message.prefix} *Antidelete PM/Group.* - \`\`\`Activate Antidelete for both groups and private messages.\`\`\` \n\n${message.prefix} *Antidelete Send Deleted Message to /chat.* - \`\`\`Send deleted messages to a specific chat. Use /chat, /sudo for your bot number, /pm for another number use /JID.\`\`\` `);
