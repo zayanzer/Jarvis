@@ -168,7 +168,7 @@ System({
 });
 
 System({
-  pattern: 'ps ?(.*)',
+  pattern: 'plstore ?(.*)',
   fromMe: isPrivate,
   desc: 'Searches for an app on Play Store',
   type: 'search',
