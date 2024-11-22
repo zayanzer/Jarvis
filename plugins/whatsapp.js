@@ -43,7 +43,6 @@ System({
     pattern: "dlt",
     fromMe: true,
     type: "whatsapp",
-    alias: ['del'],
     desc: "Deletes a message",
 }, async (message) => {
     if (!message.quoted) return await message.reply("_Reply to a message to delete it!_");
