@@ -46,7 +46,7 @@ System({
     if (!match.includes(',')) return message.reply("-> *Example : delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n->*.delschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*");    
     const [id, time] = match.split(',')
     const [jid] = await parsedJid(id);
-    const newFormat = formatDateTime(time);
+    const newFormat = formatDateTime(time.trim());
     if (!jid || !newFormat) return message.reply("-> *Example : delschedule jid, HH:MM AM/PM (time) DAY-MONTH-YEAR*\n->*.delschedule xxx@s.whatsapp.net,10:30 PM 19-11-2024*");
     const schedule = await delSchedule(jid, newFormat);
     if(!schedule.status) return await message.send('_Schedule not found_');
