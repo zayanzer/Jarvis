@@ -20,6 +20,7 @@ System({
     pattern: "shutdown",
     fromMe: true,
     type: "server",
+    alias: ['poweroff'],
     desc: "shutdown bot",
 }, async (message) => {
     await message.reply(`_Jarvis is shutting down..._`);
@@ -63,6 +64,7 @@ System({
     pattern: "platform",
     fromMe: true,
     type: "server",
+    alias: ['server'],
     desc: "Show which platform you delpoyed",
 }, async (m, match) => {
     m.reply("_*" + "You are delpoyed on " + m.client.server + "*_");
@@ -102,6 +104,7 @@ System({
     pattern: "allvar",
     fromMe: true,
     type: "server",
+    alias: ['allenv'],
     desc: "all environment variables",
 }, async (message) => {
     delete Config.DATABASE;
@@ -134,6 +137,7 @@ System({
     pattern: "getvar",
     fromMe: true,
     type: "server",
+    alias: ['getenv'],
     desc: "Show env",
 }, async (message, match) => {
     if(!match) return message.reply("_*eg: getvar sudo*_");
@@ -151,8 +155,9 @@ System({
 System({
     pattern: "getsudo", 
     fromMe: true, 
+    type: "server",
+    alias: ['getadmins'],
     desc: "shows sudo", 
-    type: "server" 
  }, async (message, match) => {
     await message.reply("_*SUDO NUMBER'S ARA :*_ "+"```"+Config.SUDO+"```")
 });
@@ -161,7 +166,7 @@ System({
     pattern: "dyno",
     fromMe: true,
     type: "server",
-    desc: "Show Quota info",
+    desc: "Show Quota info of heroku",
 }, async (message) => {
     if(message.client.server !== "HEROKU") return await message.reply(`_this cmd for heroku_`);
     if(!Config.HEROKU_API_KEY) return await message.send("*Can't find HEROKU_API_KEY*");
@@ -308,6 +313,7 @@ System({
   pattern: "mode",
   fromMe: true,
   type: "server",
+  alias: ['worktype'],
   desc: "change work type",
 }, async (message, value, m) => {
   if (!value) {
