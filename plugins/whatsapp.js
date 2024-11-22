@@ -13,22 +13,10 @@ const { System, setData } = require("../lib");
 const { parsedJid } = require("./client/");
 
 System({
-    pattern: "setpp",
-    fromMe: true,
-    desc: "Set profile picture",
-    type: "whatsapp",
-}, async (message) => {
-    if (!message.reply_message || !message.reply_message.image) return await message.reply("_Reply to a photo__");
-    let buff = await message.reply_message.download();
-    await message.setPP(message.user.jid, buff);
-    return await message.reply("_Profile Picture Updated__");
-});
-
-System({
     pattern: "jid",
     fromMe: true,
-    desc: "Give JID of chat/user",
     type: "whatsapp",
+    desc: "Give JID of chat/user",
 }, async (message) => {
     let jid = message.quoted && message.reply_message.i ? message.reply_message.sender : message.jid;
     return await message.send(jid);
@@ -37,8 +25,9 @@ System({
 System({
     pattern: "pp$",
     fromMe: true,
-    desc: "Set full screen profile picture",
     type: "whatsapp",
+    alias: ['fullpp', 'setpp'],
+    desc: "Set full screen profile picture",
 }, async (message, match) => {
     if (match === "remove") {
         await message.client.removeProfilePicture(message.user.jid);
@@ -53,18 +42,19 @@ System({
 System({
     pattern: "dlt",
     fromMe: true,
-    desc: "Deletes a message",
     type: "whatsapp",
+    alias: ['del'],
+    desc: "Deletes a message",
 }, async (message) => {
     if (!message.quoted) return await message.reply("_Reply to a message to delete it!_");
-    await message.client.sendMessage(message.chat, { delete: message.reply_message.data.key });
+    await message.reply(message.reply_message.data.key, {}, "delete");
 });
 
 System({
     pattern: "antiviewones",
     fromMe: true,
-    desc: "To get info about promot and demote",
     type: "manage",
+    desc: "To get info about promot and demote"
 }, async (message, match) => {
     if (match === "on") { 
       const antiviewones = await setData(message.user.id, "active", "true", "antiviewones");
@@ -84,13 +74,7 @@ System({
 	desc: 'delete whatsapp chat',
 	type: 'whatsapp'
 }, async (message, match) => {
-	await message.client.chatModify({
-		delete: true,
-		lastMessages: [{
-			key: message.data.key,
-			messageTimestamp: message.messageTimestamp
-		}]
-	}, message.jid)
+	await message.client.chatModify({ delete: true, lastMessages: [{ key: message.data.key, messageTimestamp: message.messageTimestamp }] }, message.jid);
 	await message.reply('_Cleared.._')
 });
 
@@ -157,8 +141,9 @@ System({
 System({
     pattern: "block",
     fromMe: true,
-    desc: "Block a user",
     type: "whatsapp",
+    alias: ['blk'],
+    desc: "Block a user",
 }, async (message) => {
     let jid = message.quoted ? message.reply_message.sender : message.jid;
     await message.client.updateBlockStatus(jid, "block");
@@ -168,8 +153,9 @@ System({
 System({
     pattern: "unblock",
     fromMe: true,
-    desc: "Unblock a user",
     type: "whatsapp",
+    alias: ['unblk'],
+    desc: "Unblock a user"
 }, async (message) => {
     let jid = message.quoted ? message.reply_message.sender : message.jid;
     await message.client.updateBlockStatus(jid, "unblock");
@@ -218,8 +204,9 @@ System({
 System({
     pattern: 'caption ?(.*)',
     fromMe: true,
-    desc: 'Change video or image caption',
     type: 'whatsapp',
+    alias: ['cap'],
+    desc: 'Change video or image caption'
 }, async (message, match) => {
     if (!message.reply_message.video && !message.reply_message.image && !message.image && !message.video) return await message.reply('*_Reply to an image or video_*');
     if (!match) return await message.reply("*Need a query, e.g., .caption Hello*");
@@ -237,7 +224,6 @@ System({
 	let img = await message.client.profilePictureUrl(message.user.jid, 'image').catch(() => "https://i.ibb.co/sFjZh7S/6883ac4d6a92.jpg");
 	await message.send(img, { caption: msg }, 'image');
 });
-
 
 System({
 	pattern: 'lastseen ?(.*)',
@@ -325,16 +311,13 @@ System({
 System({
     pattern: 'msgpin ?(.*)',
     fromMe: true,
-    desc: 'pin a message in chat',
     type: 'whatsapp',
+    alias: ['pin'],
+    desc: 'pin a message in chat'
 }, async (message, match, m) => {
-    if (!message.reply_message || !match) return await message.reply(`_Reply to a message to pin it_\n\n*Example*: _msgpin 24 =for pin msg for 24 hour_\n _msgpin 7 = for pin msg for 7days_\n _msgpin 30 = for pin msg for 30 days_`);
-    var fek = { '24': 86400, '7': 604800, '30': 2592000 };
-    var time = fek[match];
+    if (!message.quoted || !match) return await message.reply(`_Reply to a message to pin it_\n\n*Example*: _msgpin 24 =for pin msg for 24 hour_\n _msgpin 7 = for pin msg for 7days_\n _msgpin 30 = for pin msg for 30 days_`);
+    var array = { '24': 86400, '7': 604800, '30': 2592000 };
+    var time = array[match];
     if (!time) return await message.reply(`_Reply to a message to pin it_\n\n*Example*: _msgpin 24 =for pin msg for 24 hour_\n _msgpin 7 = for pin msg for 7days_\n _msgpin 30 = for pin msg for 30 days_`);
-    await message.client.sendMessage(m.jid, {
-        pin: await message.reply_message.data.key,
-        type: 1,
-        time
-    });
+    await message.reply(await message.reply_message.data.key, { type: 1, time }, "pin");
 });
