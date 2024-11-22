@@ -4,10 +4,10 @@ const { System, isPrivate, extractUrlsFromText, sleep, getJson, config, isUrl, I
 System({
     pattern: "ts ?(.*)",
     fromMe: isPrivate,
-    desc: "Download Sticker From Telegram",
     type: "download",
-},
-async (message, match, client) => {
+    alias: ['tg'],
+    desc: "Download Sticker From Telegram"
+}, async (message, match, client) => {
     match = match || message.reply_message.text;
     if (!match) return await message.reply("_Enter a tg sticker url_\nEg: https://t.me/addstickers/Vc_me_dance_pack_by_fStikBot\nKeep in mind that there is a chance of ban if used frequently");
     let packid = match.split("/addstickers/")[1];
@@ -29,8 +29,9 @@ async (message, match, client) => {
 System({
   pattern: 'apk ?(.*)',
   fromMe: isPrivate,
-  desc: 'Downloads and sends an app ',
   type: 'download',
+  alias: ['app'],
+  desc: 'Downloads and sends an app '
 }, async (message, match, m) => {
   let appId = match || m.reply_message.text;
   if (!appId) return await message.reply('*Nᴇᴇᴅ ᴀɴ ᴀᴘᴘ ɴᴀᴍᴇ*\n*Exᴀᴍᴘʟᴇ: ꜰʀᴇᴇ ꜰɪʀᴇ*');
@@ -41,8 +42,9 @@ System({
 System({
     pattern: 'fb ?(.*)',
     fromMe: isPrivate,
-    desc: 'Download Facebook video',
     type: 'download',
+    alias: ['facebook'],
+    desc: 'Download Facebook video'
 }, async (message, text) => {
     let match = (await extractUrlsFromText(text || message.reply_message.text))[0];
     if (!match) return await message.reply("*Need a Facebook public media link*\n_Example: .fb_ \n*NOTE: ONLY VIDEO LINK*");       
@@ -53,8 +55,8 @@ System({
 System({
     pattern: 'pinterest ?(.*)',
     fromMe: isPrivate,
-    desc: "pinterest downloader",
     type: "download",
+    desc: "pinterest downloader"
 }, async (message, text, m) => {
     let match = (await extractUrlsFromText(text || message.reply_message.text))[0];
     if (!match) return await message.reply('_Please provide a pinterest *url*');
@@ -67,8 +69,9 @@ System({
 System({
     pattern: 'insta ?(.*)',
     fromMe: isPrivate,
-    desc: 'instagram downloader',
     type: 'download',
+    alias: ['instagram'],
+    desc: 'instagram downloader',
 }, async (message, match) => {
     const url = (await extractUrlsFromText(match || message.reply_message.text))[0];
     if (!url) return await message.reply('Please provide an Instagram *url*'); 
@@ -84,8 +87,8 @@ System({
 System({
   pattern: "story",
   fromMe: isPrivate,
+  type: "download",
   desc: "To download insta story",
-  type: "download"
 }, async (message, match) => {
   match = match || message.reply_message.text;
   if (!isUrl(match)) {
@@ -176,8 +179,9 @@ System ({
 System({
     pattern: 'twitter ?(.*)',
     fromMe: isPrivate,
-    desc: 'Download Twitter video',
     type: 'download',
+    alias: ['tw'],
+    desc: 'Download Twitter video'
 }, async (message, match, m) => {
     match = match || message.reply_message.text;
     if (!match || !match.includes('x.com')) return await message.send("_Need a x(twitter) media url_");
@@ -189,8 +193,8 @@ System({
 System({
     pattern: 'thread ?(.*)',
     fromMe: isPrivate,
-    desc: 'Download threads media',
     type: 'download',
+    desc: 'Download threads media',
 }, async (message, match) => {
     match = match || message.reply_message.text;
     if (!match || !match.includes('threads')) return await message.send("_Need a threads media url_");
@@ -210,9 +214,10 @@ System({
 
 System({
         pattern: "tbox", 
-        fromMe: isPrivate,
-        desc: "download terabox file", 
+        fromMe: isPrivate, 
         type: "download",
+	alias: ['terabox'],
+	desc: "download terabox file"
   }, async (msg, match) => {
        match = (await extractUrlsFromText(match || msg.reply_message.text))[0];
        if (!isUrl(match)) return msg.reply("*Reply to Terabox url or provide a Terabox url*");
@@ -224,8 +229,8 @@ System({
 System({
   pattern: 'tiktok ?(.*)',
   fromMe: isPrivate,
-  desc: 'Sends TikTok video or image',
   type: 'download',
+  desc: 'Sends TikTok video or image'
 }, async (message, match, msg) => {
   match = (await extractUrlsFromText(match || message.reply_message.text))[0];
   if (!isUrl(match)) return message.reply("*Reply to TikTok URL or provide a TikTok URL*");
@@ -248,8 +253,8 @@ System({
 System({
   pattern: 'spotify ?(.*)',
   fromMe: isPrivate,
-  desc: 'Downloads song from Spotify',
   type: 'download',
+  desc: 'Downloads song from Spotify'
 }, async (message, match, m) => {
   const link = (await extractUrlsFromText(match || message.reply_message.text))[0];
   if (!link) return await message.reply("_Give a spotify *Url*_");
@@ -283,8 +288,8 @@ System({
 System({
     pattern: 'sendurl ?(.*)',
     fromMe: isPrivate,
-    desc: 'Download url',
     type: 'download',
+    desc: 'Download url'
 }, async (message, text) => {
     let match = await extractUrlsFromText(text);
     if (!match) return await message.reply("*need a url*");
@@ -296,8 +301,9 @@ System({
 System({
     pattern: 'snap ?(.*)',
     fromMe: isPrivate,
-    desc: 'snap downloader',
     type: 'download',
+    alias: ['snapchat'],
+    desc: 'snap downloader'
 }, async (message, match) => {
     const url = (await extractUrlsFromText(match || message.reply_message.text))[0];
     if (!url) return await message.reply('Please provide an SnapChat *url*'); 
@@ -315,6 +321,7 @@ System({
 	fromMe: isPrivate,
         nsfw: true,
 	type: "download",
+        alias: ['xvd'],
         desc: "xnxx downloader",
 }, async (message, match) => {
     match = match || message.reply_message.text;
