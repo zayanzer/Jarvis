@@ -281,7 +281,8 @@ System({
         commits["all"].map((commit, num) => {
             availupdate += num + 1 + " ●  " + commit.message + "\n";
         });
-        return await message.send(`${availupdate}\n\n _type *${message.prefix} update now*_`);
+        const updateCommand = message.prefix ? `${message.prefix} update now` : "update now";
+        return await message.send(`${availupdate}\n\n _type *${updateCommand}*_`);
     }
 });
 
