@@ -312,7 +312,6 @@ System({
     pattern: 'msgpin ?(.*)',
     fromMe: true,
     type: 'whatsapp',
-    alias: ['pin'],
     desc: 'pin a message in chat'
 }, async (message, match, m) => {
     if (!message.quoted || !match) return await message.reply(`_Reply to a message to pin it_\n\n*Example*: _msgpin 24 =for pin msg for 24 hour_\n _msgpin 7 = for pin msg for 7days_\n _msgpin 30 = for pin msg for 30 days_`);
