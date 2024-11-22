@@ -19,8 +19,9 @@ const { getUptime, Runtime } = require("./client/");
 System({
 	pattern: "ping",
 	fromMe: isPrivate,
-	desc: "To check ping",
 	type: "tool",
+	alias: ['pong'],
+	desc: "To check ping"
 }, async (message) => {
 	const start = new Date().getTime();
 	const ping = await message.send("*𝆺𝅥 running 𝆺𝅥*");
@@ -31,8 +32,9 @@ System({
 System({
     pattern: "vv",
     fromMe: true,
-    desc: "get view ones message",
     type: "tool",
+    alias: ['view'],
+    desc: "get view ones message"
 }, async (message) => {
    if (!message.reply_message.viewones) return await message.reply("_*Reply to a view once*_");
    return await message.client.forwardMessage(message.chat, message.reply_message.message, { readViewOnce: true });
@@ -41,8 +43,8 @@ System({
 System({
    pattern: "uptime",
    fromMe: true,
-   desc: "get the running time of the bot",
    type: "tool",
+   desc: "get the running time of the bot"
 }, async (message) => {
     const uptime = getUptime();
     return await message.reply(uptime);
@@ -74,8 +76,7 @@ System({
     fromMe: isPrivate,
     desc: 'Check if the bot is alive',
     type: 'tool'
-},
-async (message, match) => {
+}, async (message, match) => {
     const { alive } = await getData(message.user.id);
     const data = alive ? alive.message : config.ALIVE_DATA;
     if (match === "get" && message.sudo.includes(message.sender))
@@ -232,8 +233,9 @@ System({
 System({
     pattern: 'autoreaction ?(.*)',
     fromMe: true,
-    desc: 'auto reaction',
-    type: 'tool'
+    type: 'tool',
+    alias: ['reaction'],
+    desc: 'auto reaction'
 }, async (message, match) => {
     if (match === "off") {
         await setData(message.user.id, "disactie", "false", "autoreaction");
@@ -242,6 +244,6 @@ System({
         await setData(message.user.id, "actie", "true", "autoreaction");
         await message.reply("_*autoreaction enabled*__");
     } else {
-        await message.reply("_*autoreaction on/off*__");
+        await message.reply("_*->example use on/off*_");
     }
 });
