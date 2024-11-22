@@ -186,40 +186,6 @@ System({
 }});
 
 System({
-    pattern: 'pinimg ?(.*)',
-    fromMe: isPrivate,
-    desc: 'Search for images on Pinterest',
-    type: 'search',
-}, async (message, match, m) => {
-    if (!match) return await message.reply("*Need a query to search on Pinterest*\n_Example: .pinimg furina_\nWith count eg: .pinimg furina,5");
-    let [query, count] = match.trim().split(',').map(str => str.trim());
-    let images = await getJson(IronMan(`search/pin?query=${query}`));
-    if (!images.length) return await message.reply("*No images found for the given query.*");
-    count = Math.min(parseInt(count) || 1, images.length);
-    let data = Array.from({ length: count }, () => images.splice(Math.floor(Math.random() * images.length), 1)[0]);
-    for (const img of data) {
-        await message.send({ url: img }, { quoted: message }, "image");
-        await new Promise(res => setTimeout(res, 1000));
-    }
-});
-
-System({
-  pattern: 'pinvid ?(.*)',
-  fromMe: isPrivate,
-  desc: 'Search for a Pinterest video.',
-  type: 'search',
-}, async (message, match, m) => {
-  if (!match) return await message.reply("_Give a pinterest video *query*_\n*Example* : .pinvid furina edit");
-  var data = await getJson(IronMan(`ironman/search/pinterest?q=${encodeURIComponent(match)}`));
-  if (data.length > 0) {
-    var random = Math.floor(Math.random() * data.length);
-    await message.sendFromUrl(data[random], { quoted: message });
-  } else {
-    await message.reply('No video results found');
-  }
-});
-
-System({
     pattern: 'lyrics (.*)',
     fromMe: isPrivate,
     type: 'search',
