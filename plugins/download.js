@@ -70,7 +70,6 @@ System({
     pattern: 'insta ?(.*)',
     fromMe: isPrivate,
     type: 'download',
-    alias: ['instagram'],
     desc: 'instagram downloader',
 }, async (message, match) => {
     const url = (await extractUrlsFromText(match || message.reply_message.text))[0];
@@ -302,7 +301,6 @@ System({
     pattern: 'snap ?(.*)',
     fromMe: isPrivate,
     type: 'download',
-    alias: ['snapchat'],
     desc: 'snap downloader'
 }, async (message, match) => {
     const url = (await extractUrlsFromText(match || message.reply_message.text))[0];
