@@ -211,3 +211,15 @@ System({
     const data = await getJson(api + `search/xnxx?q=${encodeURIComponent(match)}`);
     await message.send(data.result.map(item => `*💎 Title:* ${item.title}\n*🔗 Link:* ${item.link}\n\n`).join(""));
 });
+
+System({
+    pattern: 'duckgo',
+    fromMe: isPrivate,
+    type: "search",
+    desc: "goduck searcher"
+}, async (message, match) => {
+    if (!match) return await message.reply("*Need a query to search*\n_Example: who is iron man_");
+    const { result } = await getJson(api + "search/duckgo?q=" + match);
+    if(!result.status) return await message.reply("*Can't find try again with more info*");
+    await message.reply({ url: result.image }, { caption: `*⬢ Query :* ${match}\n\n*⬢ Description :* ${result.data}\n\n*⬢ Link :* ${result.url}` }, 'image');
+});
