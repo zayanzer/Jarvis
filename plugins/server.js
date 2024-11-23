@@ -189,15 +189,12 @@ System({
     } else {
       newSudo = null;
     }
-
     if (!newSudo && !match) return await m.reply("_Reply to someone/mention_\n*Example:* . setsudo @user");
-
     let setSudo = Config.SUDO;
     if (newSudo) {
         setSudo = (setSudo + "," + newSudo).replace(/,,/g, ",");
         setSudo = setSudo.startsWith(",") ? setSudo.replace(",", "") : setSudo;
     }
-
     await message.reply("*new sudo numbers are :* " + setSudo);
     await message.reply("_It takes 30 seconds to take effect_");
 
