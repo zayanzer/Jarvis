@@ -279,7 +279,6 @@ System({
 	await message.send(`_Privacy Updated to *${match}*_`);
 });
 
-
 System({
 	pattern: 'read ?(.*)',
 	fromMe: true,
