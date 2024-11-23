@@ -16,8 +16,8 @@ const {
     getJson,
     postJson,
     isPrivate,
-    extractUrlsFromText
-  } = require("../lib/");
+    extractUrlsFromText 
+} = require("../lib/");
   
   
   System({
