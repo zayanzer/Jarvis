@@ -15,6 +15,7 @@ const {
     isUrl,
     sleep,
     System,
+    config,
     getData,
     setData,
     isPrivate,
@@ -86,11 +87,13 @@ System({
         for (let key of participants) {
             const jid = parsedJid(key.id);
             await message.client.groupParticipantsUpdate(message.jid, jid, "remove");
+	    if(config.KICK_BLOCK) await message.client.updateBlockStatus(jid[0], "block");
             await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid });
         }
     } else {
         const jid = parsedJid(match);
         await message.client.groupParticipantsUpdate(message.jid, jid, "remove");
+	if(config.KICK_BLOCK) await message.client.updateBlockStatus(jid[0], "block");
         await message.send(`_@${jid[0].split("@")[0]} kicked successfully_`, { mentions: jid, });
     }
 });
@@ -207,7 +210,7 @@ System({
         return await message.client.forwardMessage(message.jid, message.reply_message.message, { contextInfo: { mentionedJid: participants.map(a => a.id) } });
     } 
     else {
-        return await message.reply("*Example :* \n_*tag all*_\n*_tag admin_*\n*_tag me_*\n*_tag text_*\n_*Reply to a message to tag*_");
+        return await message.reply('*Example :* \n_*tag all*_\n*_tag admin*_\n*_tag text*_\n_*Reply to a message*_');
     }
 });
 
