@@ -291,12 +291,30 @@ System({
     desc: "To get info about promot and demote"
 }, async (message, match) => {
     if (match === "on") { 
-      const pdm = await setData(message.jid, "active", "true", "pdm");
+      await setData(message.jid, "active", "true", "pdm");
       return await message.send("_*activated*_");
     } else if (match === "off") {
-     const pdm = await setData(message.jid, "disactive", "false", "pdm");
-     return await message.send("_*deactivated*_");
+      await setData(message.jid, "disactive", "false", "pdm");
+      return await message.send("_*deactivated*_");
     } else {
      await message.send("\n*Choose a setting to pdm settings*\n", { values: [ { displayText: "*on*", id: "pdm on" }, { displayText: "*off*", id: "pdm off" } ], withPrefix: true, participates: [message.sender] }, "poll");
+    }
+});
+
+System({
+    pattern: "gcaccess",
+    fromMe: true,
+    type: "manage",
+    onlyGroup: true,
+    desc: "To give access to group cmds"
+}, async (message, match) => {
+    if (match === "on") { 
+      await setData(message.jid, "active", "true", "adminAccess");
+      return await message.send("_*activated*_");
+    } else if (match === "off") {
+     await setData(message.jid, "disactive", "false", "adminAccess");
+     return await message.send("_*deactivated*_");
+    } else {
+     await message.send("\n*Choose a option to set admin access to this group*\n", { values: [ { displayText: "*on*", id: "gcaccess on" }, { displayText: "*off*", id: "gcaccess off" } ], withPrefix: true, participates: [message.sender] }, "poll");
     }
 });
