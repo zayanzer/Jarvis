@@ -29,6 +29,7 @@ System({
     type: 'group',
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: "add a person to group"
 }, async (message, match) => {
     match = message.reply_message?.sender || match;
@@ -75,6 +76,7 @@ System({
     fromMe: true,
     type: "group",
     onlyGroup: true,
+    adminAccess: true,
     desc: "Kicks a person from the group"
 }, async (message, match) => {
     match = message.mention?.jid?.[0] || message.reply_message?.sender || match;
@@ -103,6 +105,7 @@ System({
 	fromMe: true,
 	type: "group",
 	onlyGroup: true,
+	adminAccess: true,
 	desc: "promote a member",
 }, async (message, match) => {
 	match = message.mention.jid?.[0] || message.reply_message.sender || match
@@ -120,6 +123,7 @@ System({
 	fromMe: true,
 	type: "group",
 	onlyGroup: true,
+	adminAccess: true,
 	desc: "demote a member",
 }, async (message, match) => {
 	match = message.mention.jid?.[0] || message.reply_message.sender || match
@@ -137,6 +141,7 @@ System({
     fromMe: true,
     type: 'group',
     onlyGroup: true,
+    adminAccess: true,
     desc: "Provides the group's invitation link."
 }, async (message) => {
     let isadmin = await isAdmin(message, message.user.jid);
@@ -151,6 +156,7 @@ System({
 	fromMe: true,
 	type: "group",
 	onlyGroup: true,
+	adminAccess: true,
 	desc: "nute group",
 }, async (message) => {
 	let isadmin = await isAdmin(message, message.user.jid);
@@ -166,6 +172,7 @@ System({
 	fromMe: true,
 	type: "group",
 	onlyGroup: true,
+	adminAccess: true,
 	desc: "unmute group"
 }, async (message) => {
 	let isadmin = await isAdmin(message, message.user.jid);
@@ -180,6 +187,7 @@ System({
     pattern: "tag",
     fromMe: true,
     type: "group",
+    adminAccess: true,
     desc: "mention all users in the group"
 }, async (message, match) => {
     if (!message.isGroup) return await message.reply(`@${message.sender.split("@")[0]}`, { mentions: [message.sender] });   
@@ -219,6 +227,7 @@ System({
     fromMe: true,
     type: "group",
     onlyGroup: true,
+    adminAccess: true,
     desc: "Set full-screen profile picture",
 }, async (message, match) => {
     let isadmin = await isAdmin(message, message.user.jid);
@@ -238,6 +247,7 @@ System({
     fromMe: true,
     type: 'group',
     onlyGroup: true,
+    adminAccess: true,
     desc: "Revoke Group invite link.",
 }, async (message) => {
     let isadmin = await isAdmin(message, message.user.jid);
@@ -281,6 +291,7 @@ System({
     fromMe: true,
     type: 'group',
     onlyGroup: true,
+    adminAccess: true,
     desc: "only allow admins to modify the group's settings",
 }, async (message, match) => {
     let isadmin = await isAdmin(message, message.user.jid);
@@ -312,6 +323,7 @@ System({
 	fromMe: true,
 	type: 'group',
 	onlyGroup: true,
+	adminAccess: true,
 	desc: "To change the group's subject",
 }, async (message, match, m, client) => {
 	match = match || message.reply_message.text
@@ -332,6 +344,7 @@ System({
     fromMe: true,
     type: 'group',
     onlyGroup: true,
+    adminAccess: true,
     desc: "To change the group's description",
 }, async (message, match, client) => {
     match = match || message.reply_message.text
@@ -398,6 +411,7 @@ System({
 	fromMe: true,
 	type: "group",
 	onlyGroup: true,
+	adminAccess: true,
 	desc: "Warn a user",
 }, async (message, match) => {
         let user = message.mention.jid?.[0] || message.reply_message.sender;
@@ -416,6 +430,7 @@ System({
     fromMe: isPrivate,
     type: "group",
     onlyGroup: true,
+    adminAccess: true,
     desc: "To check inactive users in group", 
 }, async (message, match) => {
     const data = await message.store.groupStatus(message.chat, "disactive");
@@ -429,6 +444,7 @@ System({
     fromMe: isPrivate,
     type: "group",
     onlyGroup: true,
+    adminAccess: true,
     desc: "To check active users in group", 
 }, async (message, match) => {
     const data = await message.store.groupStatus(message.jid, "active");
@@ -441,6 +457,7 @@ System({
     fromMe: isPrivate,
     type: "group",
     onlyGroup: true,
+    adminAccess: true,
     desc: "to send a vote message"
 }, async (message, match) => {
     let formattedResult;
@@ -474,9 +491,10 @@ System({
 System({
     pattern: "automute ?(.*)",
     fromMe: true,
-    desc: "auto mute groups",
-    type: 'manage',
     onlyGroup: true,
+    type: 'manage',
+    adminAccess: true,
+    desc: "auto mute groups"
 }, async (message, match) => {
    match = match?.toUpperCase();
    const { autoMute } = await getData(message.chat);
@@ -499,9 +517,10 @@ System({
 System({
     pattern: "autounmute ?(.*)",
     fromMe: true,
-    desc: "auto mute groups",
     type: 'manage',
-    onlyGroup: true
+    onlyGroup: true,
+    adminAccess: true,
+    desc: "auto mute groups",
 }, async (message, match) => {
    match = match?.toUpperCase();
    const { autoUnmute } = await getData(message.chat);
@@ -524,9 +543,10 @@ System({
 System({
     pattern: "getmute ?(.*)",
     fromMe: true,
-    desc: "mute/unmute group info",
     type: 'manage',
-    onlyGroup: true
+    onlyGroup: true,
+    adminAccess: true,
+    desc: "mute/unmute group info"
 }, async (message, match) => {
    const { autoMute, autoUnmute } = await getData(message.jid);
    if ((!autoMute || autoMute.status === "false") && (!autoUnmute || autoUnmute.status === "false")) return message.reply("*Auto mute and Auto unmute not set yet*");
@@ -539,6 +559,7 @@ System({
   fromMe: isPrivate,
   type: 'group',
   onlyGroup: true,
+  adminAccess: true,
   desc: 'Get group info'
 }, async (message, match, m) => {
   const ppUrl = await message.getPP(message.chat);
