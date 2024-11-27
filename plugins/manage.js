@@ -26,6 +26,7 @@ System({
     type: "manage",
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: 'remove users who use restricted words'
 }, async (message, match, m) => {
     if (!match) return await message.reply("_*antiword* on/off_\n_*antiword* action warn/kick/null_");
@@ -65,6 +66,7 @@ System({
     type: "manage",
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: 'remove users who use bot'
 }, async (message, match) => {
     if (!match) return await message.reply(`_*antilink* on/off/get_\n_*antilink* action warn/kick/null_\n_*antilink:* null/whatsapp.com_`);
@@ -107,6 +109,7 @@ System({
     fromMe: true,
     type: 'manage',
     onlyGroup: true,
+    adminAccess: true,
     desc: 'remove fake numbers'
 }, async (message, match) => {
     if (!match) return await message.reply('_*antifake* 94,92_\n_*antifake* on/off_\n_*antifake* list_');
@@ -135,6 +138,7 @@ System({
     type: "manage",
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: 'remove users who use bot'
 }, async (message, match) => {
     if (!match) return await message.reply("_*antibot* on/off_\n_*antibot* action warn/kick/null_");
@@ -161,6 +165,7 @@ System({
     type: 'manage',
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: 'demote actor and re-promote demoted person'
 }, async (message, match) => {
     if (!match) return await message.send("Choose settings to change antidemote settings", { values: [{ displayText: "on", id: "antidemote on"}, { displayText: "off", id: "antidemote off"}], onlyOnce: true, withPrefix: true, participates: [message.sender] }, "poll");
@@ -182,6 +187,7 @@ System({
     type: 'manage',
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: 'demote actor and re-promote demoted person'
 }, async (message, match) => {
     if(!message.isGroup) return;
@@ -230,6 +236,7 @@ System({
     type: 'greetings',
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: 'set welcome message'
 }, async (message, match) => {
     const { welcome } = await getData(message.from);
@@ -259,6 +266,7 @@ System({
     type: 'greetings',
     fromMe: true,
     onlyGroup: true,
+    adminAccess: true,
     desc: 'set goodbye message'
 }, async (message, match) => {
     const { exit } = await getData(message.jid);
@@ -288,6 +296,7 @@ System({
     fromMe: true,
     type: "manage",
     onlyGroup: true,
+    adminAccess: true,
     desc: "To get info about promot and demote"
 }, async (message, match) => {
     if (match === "on") { 
@@ -306,6 +315,7 @@ System({
     fromMe: true,
     type: "manage",
     onlyGroup: true,
+    adminAccess: true,
     desc: "To give access to group cmds"
 }, async (message, match) => {
     if (match === "on") { 
