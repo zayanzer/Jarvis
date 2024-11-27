@@ -29,7 +29,6 @@ System({
     type: 'group',
     fromMe: true,
     onlyGroup: true,
-    adminAccess: true,
     desc: "add a person to group"
 }, async (message, match) => {
     match = message.reply_message?.sender || match;
