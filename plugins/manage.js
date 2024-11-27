@@ -17,7 +17,7 @@ const {
     transformData,
     makeInDb
 } = require('../lib');
-const { parsedJid } = require("./client/");
+const { parsedJid, isAdmin } = require("./client/");
 const actions = ['kick','warn','null']
 
 
@@ -318,6 +318,7 @@ System({
     adminAccess: true,
     desc: "To give access to group cmds"
 }, async (message, match) => {
+    if (!await isAdmin(message, message.user.jid)) return await message.send("_I'm not an admin_");
     if (match === "on") { 
       await setData(message.jid, "active", "true", "adminAccess");
       return await message.send("_*activated*_");
