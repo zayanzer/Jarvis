@@ -144,6 +144,12 @@ System({
     alias: ['blk'],
     desc: "Block a user",
 }, async (message) => {
+    if (match === "list") {
+       const numbers = await message.client.fetchBlocklist();
+       if (!numbers?.length) return message.reply("_*No block list found*_");
+       const blockList = `_*Block List*_:\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
+       await message.reply(blockList);
+    }
     let jid = message.quoted ? message.reply_message.sender : message.jid;
     await message.client.updateBlockStatus(jid, "block");
     await message.reply("_*Blocked!*_");
