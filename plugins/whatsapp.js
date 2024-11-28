@@ -170,7 +170,7 @@ System({
             await message.client.updateBlockStatus(jid, "unblock");
             await new Promise((res) => setTimeout(res, 1500));
 	}));
-        const unblockList = `_*Unblock List*_:\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
+        const unblockList = `_*Unblock List*_\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
         return await message.reply(unblockList);
     }
     let jid = message.quoted ? message.reply_message.sender : !message.isGroup ? message.jid : false;
