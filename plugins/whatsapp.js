@@ -161,7 +161,17 @@ System({
     type: "whatsapp",
     alias: ['unblk'],
     desc: "Unblock a user"
-}, async (message) => {
+}, async (message, match) => {
+    if (match === "all") {
+        const numbers = await message.client.fetchBlocklist();
+        if (!numbers?.length) return message.reply("_*No block list found*_");
+        await Promise.all(numbers.map(async (jid) => {
+            await message.client.updateBlockStatus(jid, "unblock");
+            await new Promise((res) => setTimeout(res, 1500));
+	}));
+        const unblockList = `_*Unblock List*_:\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
+        await message.reply(unblockList);
+    }
     let jid = message.quoted ? message.reply_message.sender : message.jid;
     await message.client.updateBlockStatus(jid, "unblock");
     await message.reply("_*Unblocked!*_");
