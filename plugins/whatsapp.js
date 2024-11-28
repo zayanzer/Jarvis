@@ -150,7 +150,8 @@ System({
        const blockList = `_*Block List*_:\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
        await message.reply(blockList);
     }
-    let jid = message.quoted ? message.reply_message.sender : message.jid;
+    let jid = message.quoted ? message.reply_message.sender : !message.isGroup ? message.jid : false;
+    if(!jid) return message.reply("*Reply to a user to block them or use 'block list' to view the block list.*");
     await message.client.updateBlockStatus(jid, "block");
     await message.reply("_*Blocked!*_");
 });
@@ -172,7 +173,8 @@ System({
         const unblockList = `_*Unblock List*_:\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
         await message.reply(unblockList);
     }
-    let jid = message.quoted ? message.reply_message.sender : message.jid;
+    let jid = message.quoted ? message.reply_message.sender : !message.isGroup ? message.jid : false;
+    if(!jid) return message.reply("*Reply to a user to unblock them or use 'unblock all' to unblock all the block list.*");
     await message.client.updateBlockStatus(jid, "unblock");
     await message.reply("_*Unblocked!*_");
 });
