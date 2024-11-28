@@ -245,7 +245,6 @@ System({
     pattern: "sticker",
     fromMe: isPrivate,
     type: "converter",
-    alias: ['s'],
     desc: "_Converts Photo or video to sticker_",
 }, async (message, match) => {
    if (!(message.image || message.video || message.reply_message.video || message.reply_message.image)) return await message.reply("_Reply to photo or video_"); 
