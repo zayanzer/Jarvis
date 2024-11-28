@@ -59,7 +59,7 @@ module.exports = {
   KICK_BLOCK: toBool(process.env.KICK_BLOCK || "false"),
   CMD_REACTION: toBool(process.env.CMD_REACTION || 'false'),
   TIMEZONE: process.env.TIMEZONE || "Asia/Kolkata",
-  STARTING_MSG: toBool(process.env.STARTING_MSG) || true,
+  STARTING_MSG: toBool(process.env.STARTING_MSG || "true"),
   STATUS_REACTION_EMOJI: process.env.STATUS_REACTION_EMOJI || "🍉,🍓",
   STATUS_REACTION: toBool(process.env.STATUS_REACTION) || false,
   GEMINI: process.env.GEMINI || "null",
