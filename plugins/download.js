@@ -20,7 +20,7 @@ System({
         const stickerPackNameParts = config.STICKER_PACKNAME.split(";");
         const packname = stickerPackNameParts[0];
         const author = stickerPackNameParts[1];
-        await message.send(buff, { packname, author }, "sticker");
+        await message.send(buff, { packname, author, webp: true }, "sticker");
         await sleep(5500);
     }
     return await message.reply('Done');
@@ -259,10 +259,10 @@ System({
   if (!link) return await message.reply("_Give a spotify *Url*_");
   if (!link.includes('https://open.spotify.com')) return await message.reply("_Need a Spotify URL_");
     const data = await getJson(IronMan(`ironman/dl/spotify?link=${link}`));
-    const lnk = data.download;
-    const cover = data.cover_url;
-    const artist = data.artist;
-    const title = data.title;
+    const lnk = data.link;
+    const cover = data.metadata.cover;
+    const artist = data.metadata.artists;
+    const title = data.metadata.title;
     const q = await message.send(`_*Downloading ${title}...*_`);
     const img = await getBuffer(cover);
     const aud = await getBuffer(lnk);
@@ -276,7 +276,7 @@ System({
           thumbnail: img,
           mediaType: 1,
           mediaUrl: '',
-          sourceUrl: 'https://github.com/Loki-Xer/Jarvis',
+          sourceUrl: 'https://github.com/Loki-Xer/Jarvis-md',
           showAdAttribution: true,
           renderLargerThumbnail: true
         }
