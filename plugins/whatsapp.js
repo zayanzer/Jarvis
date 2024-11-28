@@ -147,7 +147,7 @@ System({
     if (match === "list") {
        const numbers = await message.client.fetchBlocklist();
        if (!numbers?.length) return message.reply("_*No block list found*_");
-       const blockList = `_*Block List*_:\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
+       const blockList = `_*Block List*_\n\n${numbers.map(n => `- +${n.replace('@s.whatsapp.net', '')}`).join('\n')}`;
        return await message.reply(blockList);
     }
     let jid = message.quoted ? message.reply_message.sender : !message.isGroup ? message.jid : false;
