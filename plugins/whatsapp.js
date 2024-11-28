@@ -143,7 +143,7 @@ System({
     type: "whatsapp",
     alias: ['blk'],
     desc: "Block a user",
-}, async (message) => {
+}, async (message, match) => {
     if (match === "list") {
        const numbers = await message.client.fetchBlocklist();
        if (!numbers?.length) return message.reply("_*No block list found*_");
