@@ -266,7 +266,7 @@ System({
                 await updateDeploy('do_not_clear');
                 await new Promise((resolve) => pm2.stop('jarvis-md', resolve));
             } else if (server === "KOYEB") {
-                await message.send("_*Building preparing 𐍮*_")
+                await message.reply("_*Building preparing 𐍮*_")
                 let check = await getDeployments();
                 if (check === 'true') return message.reply('_Please wait..._\n_Currently 2 instances are running in Koyeb, wait to stop one of them._');
                 let data = await redeploy();
