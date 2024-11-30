@@ -113,7 +113,7 @@ const {
       } else if (message.body.includes("2")) {
          const { result: data } = await getJson(api + "tools/tempmail");
          const user = await message.store.getName(message.sender);
-         const { tempmail: result } = await postJson(api + "tools/tempmail", { q: tempmail });
+         const { result: tempmail } = await postJson(api + "tools/tempmail", { q: tempmail });
          await message.send(`*_${data}_*\n\n*Dear user, this is your temp mail*\n\n*User: ${user}*\n*Mail received: ${tempmail.length}*\n\n\`\`\`1 ‣\`\`\` *Check mail*\n\`\`\`2 ‣\`\`\` *Next mail*\n\n*_Send a Number as reply_*`);
       }
   });
