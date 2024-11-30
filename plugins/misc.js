@@ -106,7 +106,7 @@ const {
       if (!message.body.includes('@') || !message.body.includes('‣')) return;
       if (message.body.includes("1")) {
           const text = message.body.split(" ");
-          const { tempmail: result } = await postJson(api + "tools/tempmail", { q: text[2] });
+          const { result: tempmail } = await postJson(api + "tools/tempmail", { q: text[2] });
       if (tempmail.length === 0) return message.reply("_*Mail box is empty*_");
           const formattedResponse = `\n  *Temp Mail ✉️*\n\n${tempmail.map((mail, index) => `\n  • *From :* ${mail.from}\n  • *Subject :* ${mail.subject}\n  • *Date :* ${mail.date}\n  • *Id :* ${mail.id}\n  • *Mail Number:* ${index + 1}`).join("\n\n")}`;
           await message.send(formattedResponse);
