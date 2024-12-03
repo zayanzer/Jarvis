@@ -47,7 +47,7 @@ module.exports = {
   CALL_BLOCK: toBool(process.env.CALL_BLOCK || "false"),
   SAVE_STATUS: toBool(process.env.SAVE_STATUS || "false"),
   STATUS_VIEW: process.env.STATUS_VIEW || "false",
-  REJECT_CALL: toBool(process.env.REJECT_CALL || "true"),
+  REJECT_CALL: toBool(process.env.REJECT_CALL || "false"),
   ERROR_MSG: toBool(process.env.ERROR_MSG) || true,
   WELCOME_MSG: process.env.WELCOME_MSG || "Hi &mention Welcome to &gname",
   GOODBYE_MSG: process.env.GOODBYE_MSG || "Hi $mention It was Nice Seeing you",
