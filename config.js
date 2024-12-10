@@ -35,7 +35,7 @@ module.exports = {
   READ_MSG: toBool(process.env.READ_MSG || "false"),
   BRANCH: "main",
   LINKPREVIEW: toBool(process.env.LINKPREVIEW || "false"),
-  CONTEXTINFO: process.env.CONTEXTINFO || `{"title": "ᴊᴀʀᴠɪꜱ-ᴍᴅ", "body": "ᴀᴡᴇꜱᴏᴍᴇ 🍉", "thumbnailUrl": "https://i.imgur.com/OWJc4Qx.jpeg", "renderLargerThumbnail": false, "mediaType": 1, "mediaUrl": "", "sourceUrl": "https://github.com/Loki-Xer/Jarvis-md", "showAdAttribution": true}`,
+  CONTEXTINFO: process.env.CONTEXTINFO || `{"title": "ᴊᴀʀᴠɪꜱ-ᴍᴅ", "body": "ᴀᴡᴇꜱᴏᴍᴇ 🍉", "thumbnailUrl": "https://i.imgur.com/OWJc4Qx.jpeg", "renderLargerThumbnail": false, "mediaType": 1, "mediaUrl": "", "sourceUrl": "https://github.com/Loki-Xer/Jarvis", "showAdAttribution": true}`,
   RAILWAY_API: process.env.RAILWAY_API || process.env.RAILWAY_API_KEY,
   KOYEB_API: process.env.KOYEB_API || process.env.KOYEB_API_KEY,
   KOYEB_APP_NAME: process.env.KOYEB_APP_NAME || process.env.KOYEB_NAME,
