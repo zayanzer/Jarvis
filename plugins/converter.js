@@ -15,7 +15,6 @@ const { Image } = require("node-webpmux");
 const { fromBuffer } = require('file-type');
 const { Sticker, StickerTypes } = require("wa-sticker-formatter");
 const { exec } = require("child_process");
-const translate = require("translate-google-api");
 const axios = require("axios");
 const {
     config,
@@ -33,6 +32,7 @@ const {
     setData,
     getData,
     IronMan,
+    translate,
     extractUrlsFromText,
     makeUrl
 } = require("../lib/");
@@ -402,11 +402,7 @@ System({
 }, async (message, match, m) => {
   match = message.reply_message.text || match;
   if (!match) return await message.reply("_provide text to translate *eg: i am fine;ml*_");
-  const text = match.split(";");
-  try {
-      const result = await translate(text[0], {tld: "co.in", to: text[1] || config.LANG, from: text[2] || "auto" });
-      return await message.reply(result.join());
-  } catch (error) {
-      await message.reply('_' + error.message + '_');
-  };
+  const text = match.split(";");  
+  const result = await translate(text[0], text[1] || config.LANG);
+  return await message.reply(result);
 });
