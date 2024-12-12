@@ -171,6 +171,7 @@ System({
   pattern: 'playstore ?(.*)',
   fromMe: isPrivate,
   desc: 'Searches for an app on Play Store',
+  alias: ['ps'],
   type: 'search',
 }, async (message, match, m) => {
   if (!match) return await message.reply("*Nᴇᴇᴅ ᴀɴ ᴀᴘᴘ ɴᴀᴍᴇ*\n*Example.ps WhatsApp*");
