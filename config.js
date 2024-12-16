@@ -18,6 +18,7 @@ module.exports = {
   PORT: process.env.PORT || 8000,
   PM_BLOCKER: toBool(process.env.PM_BLOCKER || "false"),
   PM_BLOCKER_MSG: process.env.PM_BLOCKER_MSG || "```Pm blocker active on this chat!!```",
+  ANTI_BROADCAST_MSG: process.env.ANTI_BROADCAST_MSG || '_*Remove me from broadcast*_',
   AUDIO_DATA: process.env.AUDIO_DATA || 'ʟᴏᴋɪ-xᴇʀ;ᴊᴀʀᴠɪꜱ;https://graph.org/file/58ea74675af7836579a3a.jpg',
   WARN_COUNT: process.env.WARN_COUNT || '3',
   AUTOMUTE_MSG: process.env.AUTOMUTE_MSG || '_Group automuted!_',
