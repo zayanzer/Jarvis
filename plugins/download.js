@@ -46,10 +46,12 @@ System({
     alias: ['facebook'],
     desc: 'Download Facebook video'
 }, async (message, text) => {
-    let match = (await extractUrlsFromText(text || message.reply_message.text))[0];
+    let match = (await extractUrlsFromText(text || message.reply_message?.text))[0];
     if (!match) return await message.reply("*Need a Facebook public media link*\n_Example: .fb_ \n*NOTE: ONLY VIDEO LINK*");
     const { result } = await getJson(api + "download/facebook?url=" + match);
-    await message.send("Choose Quality", { values: [{ displayText: "HD", id: `sendurl ${result.hd}` }, { displayText: "SD", id: `sendurl ${result.sd}` }], onlyOnce: 1, withPrefix: true, participates: [message.sender] }, "poll");
+    if (!result || (!result.hd && !result.sd)) return await message.reply("Could not fetch video. Please check the link.");
+    if (!m.isGroup) return await message.sendFromUrl(result.hd, { quoted: message.data });
+    await message.send("Choose Quality", { values: [{ displayText: "HD", id: `sendurl ${result.hd}` }, { displayText: "SD", id: `sendurl ${result.sd}` }], onlyOnce: true, withPrefix: true, participates: [message.sender] }, "poll");
 });
 
 
