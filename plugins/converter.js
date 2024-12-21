@@ -57,7 +57,7 @@ System({
     fromMe: isPrivate,
     desc: "mp3 converter",
     type: "converter",
-}, async (message, match, m) => {
+}, async (message, match) => {
    if (!(message.reply_message.video || message.reply_message.audio))
    return await message.reply("_Reply to audio or video_");	
    var audioResult = await toAudio(await message.reply_message.download());
@@ -258,9 +258,8 @@ System({
     fromMe: isPrivate,
     desc: "get exif data",
     type: "converter",
-}, async (message, match, m) => {
-   if (!message.reply_message || !message.reply_message.sticker)
-   return await message.reply("_Reply to sticker_");
+}, async (message, match) => {
+   if (!message.reply_message || !message.reply_message.sticker) return await message.reply("_Reply to sticker_");
    let img = new Image();
    await img.load(await message.reply_message.download());
    const exif = JSON.parse(img.exif.slice(22).toString());
@@ -330,7 +329,7 @@ System({
     fromMe: isPrivate,
     desc: "make media into url",
     type: "converter",
-}, async (message, match, m) => {
+}, async (message, match) => {
     if (!message.reply_message.i || (!message.reply_message.image && !message.reply_message.video && !message.reply_message.audio && !message.reply_message.sticker)) return await message.reply('*Reply to image,video,audio,sticker*');
     return await sendUrl(message);
 });
@@ -386,7 +385,7 @@ System({
     fromMe: isPrivate,
     desc: 'Shortern a URL using Bitly',
     type: 'converter',
-}, async (message, text, m) => {
+}, async (message, text) => {
     const longUrl = (await extractUrlsFromText(text || message.reply_message.text))[0];
     if (!longUrl) return await message.reply('*Please provide a URL to shorten.*');
     const { result } = await getJson(api + "tools/bitly?q=" + longUrl);
@@ -399,7 +398,7 @@ System({
   fromMe: isPrivate,
   desc: "change language",
   type: "converter",
-}, async (message, match, m) => {
+}, async (message, match) => {
   match = message.reply_message.text || match;
   if (!match) return await message.reply("_provide text to translate *eg: i am fine;ml*_");
   const text = match.split(";");  
