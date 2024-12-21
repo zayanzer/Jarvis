@@ -230,26 +230,35 @@ System({
  });
 
 System({
-  pattern: 'tiktok ?(.*)',
-  fromMe: isPrivate,
-  type: 'download',
-  desc: 'Sends TikTok video or image'
+	pattern: 'tiktok ?(.*)',
+	fromMe: isPrivate,
+	type: 'download',
+	desc: 'Download TikTok video or image'
 }, async (message, match, msg) => {
   match = (await extractUrlsFromText(match || message.reply_message.text))[0];
   if (!isUrl(match)) return message.reply("*Reply to TikTok URL or provide a TikTok URL*");
   if (!match || !match.includes("tiktok")) return message.reply("*Reply to TikTok URL or provide a TikTok URL*");
   const { result: data } = await getJson(api + "download/tiktok?url=" + match);
   var vidd = data.data.find(item => item.type === 'nowatermark_hd');
+  var ved = data.data.find(item => item.type === 'nowatermark');
   var pic = data.data.filter(item => item.type === 'photo');
-  if (vidd) {
-    await message.reply({ url: vidd.url }, { caption: "*_Downloaded!_*", quoted: message.data }, "video");
+  if (vidd || ved) {
+    if (!message.isGroup) {
+      if (vidd) {
+        await message.reply({ url: vidd.url }, { caption: "*_Downloaded_*", quoted: message.data }, "video");
+      } else {
+        return message.reply("*Video not available*");
+      }
+    } else {
+      await message.send("Choose quality", { values: [{ displayText: "HD", id: `sendurl ${vidd?.url}` }, { displayText: "SD", id: `sendurl ${ved?.url}` }].filter(Boolean), onlyOnce: 1, withPrefix: true, participates: [message.sender] }, "poll");
+    }
   } else if (pic.length > 0) {
     for (var photo of pic) {
       await message.reply({ url: photo.url }, { caption: "*_Downloaded!_*", quoted: message.data }, "image");
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
   } else {
-    return message.reply("*Couldn't find valid media to download*");
+    return message.reply("*Couldn't find media*");
   }
 });
 
