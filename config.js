@@ -1,10 +1,9 @@
 const { Sequelize } = require('sequelize');
+const { loadEnv } = require("./lib/");
 const fs = require('fs');
 
 if (fs.existsSync('config.env')) {
-  require('dotenv').config({
-      path: './config.env'
-  });
+  loadEnv('config.env');
 };
 
 global.api = 'https://nervous-rosamond-jarvis-bot-99587a26.koyeb.app/';
