@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
 const { Message } = require("../lib/Base/");  
-const { System, sendAlive, setData, getData, isPrivate, config, IronMan, database, removeData, removeCmd } = require("../lib/");  
+const { System, sendAlive, setData, getData, isPrivate, config, IronMan, database, removeData, removeCmd, bot } = require("../lib/");  
 const { getUptime, Runtime } = require("./client/"); 
 
 System({
