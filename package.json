@@ -4,7 +4,7 @@
     "description": "A simple WhatsApp Bot Based On WhiskeySockets/Baileys",
     "main": "index.js",
     "scripts": {
-        "postinstall": "npm install -g pm2",
+        "postinstall": "npm install -g pm2 && node -e \"try { require('sharp') } catch (e) { process.exit(1); }\" || yarn add --ignore-engines sharp@0.33.5",
         "start": "pm2 start . --attach --name Jarvis-md",
         "stop": "pm2 stop Jarvis-md"
     },
