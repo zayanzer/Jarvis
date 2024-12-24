@@ -265,7 +265,7 @@ System({
                 let data = await koyeb.update();
                 return await message.reply(data);
             } else {
-                await gitPull(message);
+                await bot.update(message);
                 await bot.restart();
             }
         }
