@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const { loadEnv } = require("./lib/");
+const { loadEnv } = require("jarvis-md");
 const fs = require('fs');
 
 if (fs.existsSync('config.env')) {
