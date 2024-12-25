@@ -169,8 +169,7 @@ System({
 }, async (message, match) => { 
     if (!message.quoted || !message.reply_message.msg || !message.reply_message.msg.fileSha256) return await message.reply('_Reply to an image/video/audio/sticker_'); 
     if (!match) return await message.reply('_Example: setcmd ping_'); 
-    const hash = message.reply_message.msg.fileSha256.join("");
-    const setcmd = await setData(hash, match, "true", "setCmd");
+    const setcmd = await setData(message.reply_message.msg.fileSha256, match, "true", "setCmd");
     if (!setcmd) return await message.reply('_Failed_');
     await message.reply('_Success_');
 });
