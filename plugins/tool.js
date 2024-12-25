@@ -186,7 +186,7 @@ System({
 	if(!cmd) return await message.reply('_Failed_');
 	return await message.reply('_Success_');
     };
-    let hash = message.reply_message.msg.fileSha256.join("")
+    const hash = message.reply_message.msg.fileSha256;
     if (!hash) return await message.reply('_Failed_');
     const delcmd = await removeData(hash, "setCmd");
     if (!delcmd) return await message.reply('_Failed_');
