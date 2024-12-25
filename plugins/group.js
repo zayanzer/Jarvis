@@ -505,7 +505,7 @@ System({
    var admin = await isAdmin(message, message.user.jid);
    if (!admin) return await message.send("_I'm not an admin_");
    await setData(message.jid, match, "true", "autoMute");
-   await message.send(`*_Group will auto mute at ${match}, rebooting.._*`)
+   await message.send(`*_Group will auto mute at ${match}, rebooting.._*`);
    bot.restart();
 });
 
