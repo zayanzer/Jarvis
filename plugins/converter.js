@@ -178,7 +178,7 @@ System({
     type: "converter",
 }, async (message, match) => {
    let data;
-   if (!message.reply_message || (!message.reply_message.sticker && !message.reply_message.audio)) return await message.reply("_Reply to a sticker or audio_");
+   if (!message.quoted || (!message.reply_message.sticker && !message.reply_message.audio)) return await message.reply("_Reply to a sticker or audio_");
    if (message.reply_message.sticker) {
    const stickerPackName = (match || config.STICKER_PACKNAME).split(";");
    await message.send(await message.reply_message.download(), { packname: stickerPackName[0], author: stickerPackName[1] }, "sticker");
@@ -210,7 +210,7 @@ System({
     desc: "get exif data",
     type: "converter",
 }, async (message, match) => {
-   if (!message.reply_message || !message.reply_message.sticker) return await message.reply("_Reply to sticker_");
+   if (!message.quoted || !message.reply_message.sticker) return await message.reply("_Reply to sticker_");
    let img = new Image();
    await img.load(await message.reply_message.download());
    const exif = JSON.parse(img.exif.slice(22).toString());
@@ -281,7 +281,7 @@ System({
     desc: "make media into url",
     type: "converter",
 }, async (message, match) => {
-    if (!message.reply_message.i || (!message.reply_message.image && !message.reply_message.video && !message.reply_message.audio && !message.reply_message.sticker)) return await message.reply('*Reply to image,video,audio,sticker*');
+    if (!message.quoted || (!message.reply_message.image && !message.reply_message.video && !message.reply_message.audio && !message.reply_message.sticker)) return await message.reply('*Reply to image,video,audio,sticker*');
     return await sendUrl(message);
 });
 
