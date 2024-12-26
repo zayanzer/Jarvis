@@ -215,7 +215,7 @@ System({
    let msg;
    const { mention } = await getData(message.user.id);    
     if (match === 'get' && message.sudo.includes(message.sender)) {
-        return await message.send(mention.message);
+        return await message.send(mention?.message || '_*mention not set yet*_');
     } else if (match && message.sudo.includes(message.sender)) {
         if (match === "off") {
             msg = await setData(message.user.id, mention.message, "false", "mention");
