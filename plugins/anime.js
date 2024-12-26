@@ -43,14 +43,13 @@ System({
     if (!match) return await message.send("*Need an anime name*\n_Example: .anime Future Diary_");    
     const res = await fetch(IronMan(`ironman/s/anime?anime=${encodeURI(match)}`));
     if (!res.ok) return await message.send("*Not Found*\nCheck if the anime name is correct");    
-    const data = await res.json();
     const { 
         Romaji, Japanese, Summary, Released, Ended, Popularity, 
         Rating, 'Age Rating': AgeRating, Subtype, Status, 
         Poster, Episodes, 'Episode Length': EpisodeLength, 
         'Total Length': TotalLength, 'Show Type': ShowType, 
         NSFW, Low_Cover: Cover, YouTube 
-    } = data;
+    } = await res.json();
     const caption = `➥ *ɴᴀᴍᴇ:* ${Romaji}\n✰ *ᴛʏᴘᴇ:* ${ShowType}\n✰ *ꜱᴜʙᴛʏᴘᴇ:* ${Subtype}\n✰ *ꜱᴛᴀᴛᴜꜱ:* ${Status}\n✰ *ʀᴇʟᴇᴀꜱᴇᴅ:* ${Released}\n✰ *ᴇɴᴅᴇᴅ:* ${Ended}\n✰ *ᴇᴘɪꜱᴏᴅᴇꜱ:* ${Episodes}\n✰ *ᴛᴏᴛᴀʟ ʟᴇɴɢᴛʜ:* ${TotalLength}\n✰ *ᴇᴘɪꜱᴏᴅᴇ ʟᴇɴɢᴛʜ:* ${EpisodeLength}\n✰ *ᴀɢᴇ ʀᴀᴛɪɴɢ:* ${AgeRating}\n✰ *ᴘᴏᴘᴜʟᴀʀɪᴛʏ:* ${Popularity}\n✰ *ʀᴀᴛɪɴɢ:* ${Rating}\n✰ *ɴꜱꜰᴡ:* ${NSFW}\n✰ *ꜱᴜᴍᴍᴀʀʏ:* ${Summary}\n➥ *ᴛʀᴀɪʟᴇʀ:* https://youtube.com/watch?v=${YouTube}\n`;    
     await message.send({ url: Poster }, { caption, linkPreview: { title: data['English Title'], body: Japanese, thumbnail: await getBuffer(Cover), mediaType: 1, mediaUrl: "https://github.com/Loki-Xer/Jarvis-md", sourceUrl: "https://github.com/Loki-Xer/Jarvis-md", showAdAttribution: false, renderLargerThumbnail: true }, quoted: message }, 'image');
 });
