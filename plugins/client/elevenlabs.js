@@ -2,15 +2,17 @@ const axios = require("axios");
 const { ELEVENLABS } = require('../../config');
 
 async function elevenlabs(match) {  
-  const aittsid = await axios.get("https://gist.githubusercontent.com/Loki-Xer/6e601a0992fa5bc920e4b94f771ec129/raw")
-  const labsVoiceID = aittsid.data;
-  let response = {};
-  for(key in labsVoiceID) {
-    if(match.split(/[|,;]/)[1].toLowerCase().trim() == key){
-    let v_key = labsVoiceID[key]["voice_id"];
-    const voiceURL = `https://api.elevenlabs.io/v1/text-to-speech/${v_key}/stream`;
+  try {
+    const aittsid = await axios.get("https://gist.githubusercontent.com/Loki-Xer/6e601a0992fa5bc920e4b94f771ec129/raw");
+    const labsVoiceID = aittsid.data;
+    let response = {};
     
-    response = await axios({
+    for (let key in labsVoiceID) {
+      if (match.split(/[|,;]/)[1].toLowerCase().trim() == key) {
+        let v_key = labsVoiceID[key]["voice_id"];
+        const voiceURL = `https://api.elevenlabs.io/v1/text-to-speech/${v_key}/stream`;
+        
+        response = await axios({
           method: "POST",
           url: voiceURL,
           data: {
@@ -23,7 +25,7 @@ async function elevenlabs(match) {
           },
           headers: {
             Accept: "audio/mpeg",
-            "xi-api-key": (ELEVENLABS || '2a0050b5932ff8d79f54418fa370d1c1'),
+            "xi-api-key": ELEVENLABS || '2a0050b5932ff8d79f54418fa370d1c1',
             "Content-Type": "application/json",
           },
           responseType: "stream"
@@ -31,8 +33,12 @@ async function elevenlabs(match) {
         break;
       }
     }
+    
     return response.data;
+  } catch (error) {
+    return false;
   }
+}
 
 module.exports = {
   elevenlabs
