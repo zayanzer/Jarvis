@@ -35,9 +35,9 @@ System({
 });
 
 System({
-    pattern: 'sanime (.*)',
+    pattern: 'fanime (.*)',
     fromMe: isPrivate,
-    desc: 'Get details of an anime',
+    desc: 'find anime details',
     type: 'anime',
 }, async (message, match) => {
     if (!match) return await message.send("*Need an anime name*\n_Example: .anime Future Diary_");    
