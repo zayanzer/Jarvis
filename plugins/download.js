@@ -125,25 +125,18 @@ System({
   const link = (await extractUrlsFromText(match || message.reply_message.text))[0];
   if (!link || !link.includes('soundcloud')) return await message.send("*Need a SoundCloud link to download*\n_Example: .soundcloud https://m.soundcloud.com/corpse_husband/life-waster_");
     const response = await getJson(IronMan(`ironman/soundcloud/download?link=${link}`));
-    const q = await message.send(`*Downloading ${response.title}*`);
-    const url = IronMan(`ironman/scdl?url=${link}`);
-    const aud = await getBuffer(url);
-    const img = await getBuffer(response.thumb);
-    const result = await toAudio(aud, 'mp3');
+    await message.send(`*Downloading ${response.title}*`);
+    const result = await toAudio(await getBuffer(IronMan(`ironman/scdl?url=${link}`)), 'mp3');
     await message.reply(result, {
       mimetype: 'audio/mpeg',
-      contextInfo: {
-        externalAdReply: {
+      linkPreview: {
           title: response.title,
-          body: 'ᴊᴀʀᴠɪꜱ-ᴍᴅ',
-          thumbnail: img,
-          mediaType: 1,
-          mediaUrl: url,
+          body: '*Jarvis-md*',
+          thumbnail: await getBuffer(response.thumb),
           sourceUrl: link,
           showAdAttribution: false,
           renderLargerThumbnail: true
         }
-      }
     }, "audio");
 });
 
@@ -186,7 +179,7 @@ System({
     alias: ['tw'],
     desc: 'Download Twitter video'
 }, async (message, match, m) => {
-    match = match || message.reply_message.text;
+    match = message.quoted && message.reply_message.text ? message.reply_message.text : match;
     if (!match || !match.includes('x.com')) return await message.send("_Need a x(twitter) media url_");
     const url = (await extractUrlsFromText(match))[0];
     const { media } = await getJson(IronMan(`ironman/dl/x?url=${encodeURIComponent(url)}`));
@@ -199,7 +192,7 @@ System({
     type: 'download',
     desc: 'Download threads media',
 }, async (message, match) => {
-    match = match || message.reply_message.text;
+    match = message.quoted && message.reply_message.text ? message.reply_message.text : match;
     if (!match || !match.includes('threads')) return await message.send("_Need a threads media url_");
     const encodedUrl = encodeURIComponent((await extractUrlsFromText(match.trim()))[0]);
     const media = await getJson(IronMan(`ironman/dl/threads?url=${encodedUrl}`));
@@ -269,32 +262,19 @@ System({
   desc: 'Downloads song from Spotify'
 }, async (message, match, m) => {
   const link = (await extractUrlsFromText(match || message.reply_message.text))[0];
-  if (!link) return await message.reply("_Give a spotify *Url*_");
-  if (!link.includes('https://open.spotify.com')) return await message.reply("_Need a Spotify URL_");
-    const data = await getJson(IronMan(`ironman/dl/spotify?link=${link}`));
-    const lnk = data.download;
-    const cover = data.cover_url;
-    const artist = data.artist;
-    const title = data.title;
-    const q = await message.send(`_*Downloading ${title}...*_`);
-    const img = await getBuffer(cover);
-    const aud = await getBuffer(lnk);
-    const audio = await toAudio(aud);
-    await message.reply(audio, {
+  if (!link || !link.includes('spotify')) return await message.reply("_Give a valid Spotify *Url*_");
+  const { download: lnk, cover_url: cover, artist, title } = await getJson(IronMan(`ironman/dl/spotify?link=${link}`));
+  await message.send(`_*Downloading ${title}...*_`);
+  const [img, aud] = await Promise.all([getBuffer(cover), getBuffer(lnk)]);
+  await message.reply(await toAudio(aud), {
       mimetype: 'audio/mpeg',
-      contextInfo: {
-        externalAdReply: {
-          title: title,
-          body: artist,
-          thumbnail: img,
-          mediaType: 1,
-          mediaUrl: '',
-          sourceUrl: 'https://github.com/Loki-Xer/Jarvis',
-          showAdAttribution: true,
-          renderLargerThumbnail: true
-        }
+      linkPreview: {
+            title, body: artist, 
+	    thumbnail: img,
+            mediaType: 1, sourceUrl: 'https://github.com/Loki-Xer/Jarvis',
+            showAdAttribution: true, renderLargerThumbnail: true
       }
-    }, "audio");
+  }, "audio");
 });
 
 System({
