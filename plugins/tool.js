@@ -68,7 +68,7 @@ System({
    desc: "to reboot your bot",
    type: "tool",
 }, async (message, match) => {
-    await message.reply('_Rebooting..._');
+    await message.reply('_Rebooting..._')
     bot.restart();
 });
 
@@ -169,7 +169,8 @@ System({
 }, async (message, match) => { 
     if (!message.quoted || !message.reply_message.msg || !message.reply_message.msg.fileSha256) return await message.reply('_Reply to an image/video/audio/sticker_'); 
     if (!match) return await message.reply('_Example: setcmd ping_'); 
-    const setcmd = await setData(message.reply_message.msg.fileSha256, match, "true", "setCmd");
+    const hash = message.reply_message.msg.fileSha256.join("");
+    const setcmd = await setData(hash, match, "true", "setCmd");
     if (!setcmd) return await message.reply('_Failed_');
     await message.reply('_Success_');
 });
@@ -186,7 +187,7 @@ System({
 	if(!cmd) return await message.reply('_Failed_');
 	return await message.reply('_Success_');
     };
-    const hash = message.reply_message.msg.fileSha256;
+    const hash = message.reply_message.msg.fileSha256.join("");
     if (!hash) return await message.reply('_Failed_');
     const delcmd = await removeData(hash, "setCmd");
     if (!delcmd) return await message.reply('_Failed_');
