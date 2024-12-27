@@ -54,6 +54,7 @@ module.exports = {
   MENU_FONT: process.env.MENU_FONT || "0;0",
   SUDO: process.env.SUDO || '',
   STATUS_REPLY: toBool(process.env.STATUS_REPLY || "false"),
+  AUTH_FILE: process.env.AUTH_FILE,
   STATUS_REPLY_MSG: process.env.STATUS_REPLY_MSG || "*Nice Status Brother 🦫✨*",
   KICK_BLOCK: toBool(process.env.KICK_BLOCK || "false"),
   CMD_REACTION: toBool(process.env.CMD_REACTION || 'false'),
