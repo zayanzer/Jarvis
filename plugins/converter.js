@@ -210,7 +210,7 @@ System({
     desc: "get exif data",
     type: "converter",
 }, async (message, match) => {
-   if (!message.quoted || !message.reply_message.sticker) return await message.reply("_Reply to sticker_");
+   if (!message.reply_message || !message.reply_message.sticker) return await message.reply("_Reply to sticker_");
    let img = new Image();
    await img.load(await message.reply_message.download());
    const exif = JSON.parse(img.exif.slice(22).toString());
@@ -351,6 +351,7 @@ System({
   type: "converter",
 }, async (message, match) => {
   match = message.reply_message.text || match;
+  if(message.quoted && message.reply_message.text && match) match = message.reply_message.text + ";" + match;
   if (!match) return await message.reply("_provide text to translate *eg: i am fine;ml*_");
   const text = match.split(";");  
   const result = await translate(text[0], text[1] || config.LANG);
