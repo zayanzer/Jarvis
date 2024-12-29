@@ -285,8 +285,9 @@ System({
 }, async (message, text) => {
     let match = await extractUrlsFromText(text);
     if (!match) return await message.reply("*need a url*");
+    let data = { key: { fromMe: false, participant: "0@s.whatsapp.net", remoteJid: "status@broadcast", id: message.client.generateMessageId() }, message: { extendedTextMessage: { "text": "\n*Made With Love 🤍*" }}};
     for (const imageUrl of match) {
-        if (imageUrl) await message.sendFromUrl(imageUrl, { caption: "*Done ✨*", quoted: message.data });
+        if (imageUrl) await message.sendFromUrl(imageUrl, { caption: "*Done ✨*", quoted: data });
     }
 });
 
