@@ -11,6 +11,7 @@
     "engines": {
         "node": ">=18.0.0 <=22.x"
     },
+    "license": "MIT",
     "dependencies": {
         "@whiskeysockets/baileys": "git+https://github.com/Loki-Xer/Baileys.git",
         "browser-id3-writer": "^4.4.0",
