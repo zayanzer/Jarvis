@@ -183,7 +183,7 @@ System({
     } else {
       newSudo = null;
     }
-    if (!newSudo && !match) return await m.reply("_Reply to someone/mention_\n*Example:* . setsudo @user");
+    if (!newSudo && !match) return await message.reply("_Reply to someone/mention_\n*Example:* . setsudo @user");
     let setSudo = Config.SUDO;
     if (newSudo) {
         setSudo = (setSudo + "," + newSudo).replace(/,,/g, ",");
