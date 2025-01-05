@@ -176,7 +176,7 @@ System({
     pattern: 'twitter ?(.*)',
     fromMe: isPrivate,
     type: 'download',
-    alias: ['tw'],
+    alias: ['twdl'],
     desc: 'Download Twitter video'
 }, async (message, match, m) => {
     match = message.quoted && message.reply_message.text ? message.reply_message.text : match;
