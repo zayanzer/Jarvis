@@ -559,8 +559,8 @@ System({
     desc: 'list group join requests'
 }, async (message, match) => {
    const result = await message.client.groupRequestParticipantsList(message.jid);
-   if (!result.length) return await message.send('_*no pending requests*_');
-   await message.send("*pending requests list*\n\n" + result.map((id) => `+${id.jid.split('@')[0]}`).join('\n'));
+   if (!result.length) return await message.send('_*No pending requests*_');
+   await message.send("*Pending requests list*\n\n" + result.map((id) => `+${id.jid.split('@')[0]}`).join('\n'));
 });
 
 System({
@@ -572,7 +572,7 @@ System({
     desc: 'accept all group join request',
 }, async (message, match) => {
     if (!(await isAdmin(message, message.user.jid))) return await message.send("_I'm not an admin_");
-    if (!match) return await message.reply("_Provide a match, e.g., gapprove all or gapprove: 917025673121, 4915147867879_");
+    if (!match) return await message.reply("_Provide a number, e.g., gapprove all or gapprove: 917025673121, 4915147867879_");
     const result = await message.client.groupRequestParticipantsList(message.jid);
     if (!result.length) return await message.send('_*No pending requests*_');
     const jids = match === "all" ? result.map(id => id.jid) : match.split(',').map(num => num.trim().replace(/\+/g, '').replace(/\s/g, '') + '@s.whatsapp.net').filter(jid => jid !== '@s.whatsapp.net'); 
@@ -593,7 +593,7 @@ System({
     desc: 'reject all group request',
 }, async (message, match) => {
     if (!(await isAdmin(message, message.user.jid))) return await message.send("_I'm not an admin_");
-    if (!match) return await message.reply("_Provide a match, e.g., greject all or greject 917025673121, 4915147867879_");
+    if (!match) return await message.reply("_Provide a number, e.g., greject all or greject 917025673121, 4915147867879_");
     const result = await message.client.groupRequestParticipantsList(message.jid);
     if (!result.length) return await message.send('_*No pending requests*_');
     const jids = match === "all" ? result.map(id => id.jid) : match.split(',').map(num => num.trim().replace(/\+/g, '').replace(/\s/g, '') + '@s.whatsapp.net').filter(jid => jid !== '@s.whatsapp.net'); 
@@ -602,6 +602,6 @@ System({
         await message.client.groupRequestParticipantsUpdate(message.jid, [jid], 'reject');
         await sleep(800);
     };
-    await message.send(match === "all" ? '_*Reject all*_' : '_*Reject selected members*_');
+    await message.send(match === "all" ? '_*Rejected all*_' : '_*Rejected selected members*_');
 });
 
