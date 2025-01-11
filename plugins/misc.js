@@ -102,7 +102,7 @@ System({
       fromMe: isPrivate,
       dontAddCommandList: true,
   },async (message) => {
-      if (message.isBot || !message.reply_message.fromMe || !message.reply_message.text) return;
+      if (message.quoted && (!message.isBot || !message.reply_message?.fromMe || !message.reply_message?.text)) return;
       if (!message.body.includes('@') || !message.body.includes('‣')) return;
       if (message.body.includes("1")) {
           const text = message.body.split(" ");
