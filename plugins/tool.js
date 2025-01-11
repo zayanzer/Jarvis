@@ -31,6 +31,24 @@ System({
 });
 
 System({
+    pattern: 'mention ?(.*)',
+    fromMe: true,
+    desc: 'mention',
+    type: 'tool'
+}, async (message, match) => {
+   const { mention = { status: "false", message: null } } = await getData(message.user.id);
+   if (match === "get" && message.isOwner) return await message.send(mention.message || '_*Mention not set yet*_');
+   if (match && message.isOwner) {
+       const status = match === "on" ? "true" : match === "off" ? "false" : mention.status;
+       const msg = ["on", "off"].includes(match) ? mention.message : match;
+       if (!msg.trim()) return await message.reply('_Invalid mention message! Please provide valid text._');
+       const update = await setData(message.user.id, msg, status, "mention");
+       return await message.reply(update ? '_Mention Updated_' : '_Error in updating_');
+   };
+   return await message.reply("_Check mention format at https://github.com/Loki-Xer/Jarvis-md/wiki_");
+});
+
+System({
     pattern: "vv",
     fromMe: true,
     type: "tool",
@@ -80,14 +98,11 @@ System({
 }, async (message, match) => {
     const { alive } = await getData(message.user.id);
     const data = alive ? alive.message : config.ALIVE_DATA;
-    if (match === "get" && message.sudo.includes(message.sender))
-        return await message.send(data);
-    if (match && message.sudo.includes(message.sender)) {
-        if (await setData(message.user.id, match, "true", "alive"))
-            return await message.send('_Alive Message Updated_');
-        else
-            return await message.send('_Error in updating_');
-    }
+    if (match === "get" && message.isOwner) return await message.send(data);
+    if (match && message.isOwner) {
+        const isUpdated = await setData(message.user.id, match, "true", "alive");
+        return await message.send(isUpdated ? "_Alive Message Updated_" : "_Error in updating_");
+    };
     return await sendAlive(message, data);
 });
 
@@ -208,33 +223,6 @@ System({
 });
 
 System({
-    pattern: 'mention ?(.*)',
-    fromMe: true,
-    desc: 'mention',
-    type: 'tool'
-}, async (message, match) => {
-   let msg;
-   const { mention } = await getData(message.user.id);    
-    if (match === 'get' && message.sudo.includes(message.sender)) {
-        return await message.send(mention?.message || '_*mention not set yet*_');
-    } else if (match && message.sudo.includes(message.sender)) {
-        if (match === "off") {
-            msg = await setData(message.user.id, mention.message, "false", "mention");
-        } else if (match === "on") {
-            msg = await setData(message.user.id, mention.message, "true", "mention");
-        } else {
-            msg = await setData(message.user.id, match, "true", "mention");       
-        }
-        if (msg) {
-            return await message.reply('_Mention Updated_');
-        } else {
-            return await message.reply('_Error in updating__');
-        }
-    }
-    return await message.reply("_You can check the format of mention https://github.com/Loki-Xer/Jarvis-md/wiki_");
-});
-
-System({
     pattern: 'autoreaction ?(.*)',
     fromMe: true,
     type: 'tool',
@@ -248,6 +236,6 @@ System({
         await setData(message.user.id, "actie", "true", "autoreaction");
         await message.reply("_*autoreaction enabled*__");
     } else {
-        await message.reply("_*->example use on/off*_");
+        await message.reply("_*example use on/off*_");
     }
 });
