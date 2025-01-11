@@ -548,3 +548,60 @@ System({
    let msg = [autoMute?.status === "true" ? `*⬦ Auto Mute Set As:* ${autoMute.message}` : "", autoUnmute?.status === "true" ? `*⬦ Auto Unmute Set As:* ${autoUnmute.message}` : ""].filter(Boolean).join("\n");
    return message.reply("*Scheduled Mutes/Unmutes*\n\n" + msg);
 });
+
+
+System({
+    pattern: "glist",
+    fromMe: true,
+    type: "group",
+    onlyGroup: true,
+    adminAccess: true,
+    desc: 'list group join requests'
+}, async (message, match) => {
+   const result = await message.client.groupRequestParticipantsList(message.jid);
+   if (!result.length) return await message.send('_*no pending requests*_');
+   await message.send("*pending requests list*\n\n" + result.map((id) => `+${id.jid.split('@')[0]}`).join('\n'));
+});
+
+System({
+    pattern: "gapprove",
+    fromMe: true,
+    type: "group",
+    onlyGroup: true,
+    adminAccess: true,
+    desc: 'accept all group join request',
+}, async (message, match) => {
+    if (!(await isAdmin(message, message.user.jid))) return await message.send("_I'm not an admin_");
+    if (!match) return await message.reply("_Provide a match, e.g., gapprove all or gapprove: 917025673121, 4915147867879_");
+    const result = await message.client.groupRequestParticipantsList(message.jid);
+    if (!result.length) return await message.send('_*No pending requests*_');
+    const jids = match === "all" ? result.map(id => id.jid) : match.split(',').map(num => num.trim().replace(/\+/g, '').replace(/\s/g, '') + '@s.whatsapp.net').filter(jid => jid !== '@s.whatsapp.net'); 
+    for (const jid of jids) {
+        if (!result.map(id => id.jid).includes(jid)) return await message.send(`_*+${jid.split('@')[0]} is not required*_`);
+        await message.client.groupRequestParticipantsUpdate(message.jid, [jid], 'approve');
+        await sleep(800);
+    };
+    await message.send(match === "all" ? '_*Approved all*_' : '_*Approved selected members*_');
+});
+
+System({
+    pattern: "greject",
+    fromMe: true,
+    type: "group",
+    onlyGroup: true,
+    adminAccess: true,
+    desc: 'reject all group request',
+}, async (message, match) => {
+    if (!(await isAdmin(message, message.user.jid))) return await message.send("_I'm not an admin_");
+    if (!match) return await message.reply("_Provide a match, e.g., greject all or greject 917025673121, 4915147867879_");
+    const result = await message.client.groupRequestParticipantsList(message.jid);
+    if (!result.length) return await message.send('_*No pending requests*_');
+    const jids = match === "all" ? result.map(id => id.jid) : match.split(',').map(num => num.trim().replace(/\+/g, '').replace(/\s/g, '') + '@s.whatsapp.net').filter(jid => jid !== '@s.whatsapp.net'); 
+    for (const jid of jids) {
+        if (!result.map(id => id.jid).includes(jid)) return await message.send(`_*+${jid.split('@')[0]} is not required*_`);
+        await message.client.groupRequestParticipantsUpdate(message.jid, [jid], 'reject');
+        await sleep(800);
+    };
+    await message.send(match === "all" ? '_*Reject all*_' : '_*Reject selected members*_');
+});
+
