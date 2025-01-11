@@ -9,10 +9,10 @@ Jarvis - Loki-Xer
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
 const {
     System,
     IronMan,
+    getJson,
     postJson,
     isPrivate,
     interactWithAi,
@@ -20,11 +20,6 @@ const {
     gemini,
     config
 } = require("../lib/");
-
-async function readMore() {
-  const readmore = String.fromCharCode(8206).repeat(4001);
-  return readmore;
-};
 
 System({
     pattern: "thinkany", 
@@ -168,21 +163,10 @@ System({
   type: 'ai',
 }, async (message, match) => {
   const text = message.reply_message.text || match;
-  const res = await fetch(IronMan(`ironman/ai/detectai?text=${encodeURIComponent(text)}`));
-  const data = await res.json();
-  let output = "*𝙰𝙸 𝙳𝙴𝚃𝙴𝙲𝚃𝙸𝙾𝙽*\n\n";
-  for (let i = 0; i < data.length; i++) {
-    const item = data[i];
-    output += `*тєχт:* ${item.text}\n`;
-    output += `*ѕ¢σяє:* ${(item.score * 100).toFixed(2)}%\n`;
-    output += `*туρє:* ${item.type}\n\n`;
-    if (i === 2 && data.length > 3) {
-      output += await readMore();
-    }
-  }
+  const data = await getJson(IronMan(`ironman/ai/detectai?text=${encodeURIComponent(text)}`));
+  let output = "*𝙰𝙸 𝙳𝙴𝚃𝙴𝙲𝚃𝙸𝙾𝙽*\n\n" + data.slice(0, 3).map((item, i) => `*тєχт:* ${item.text}\n*ѕ¢σяє:* ${(item.score * 100).toFixed(2)}%\n*туρє:* ${item.type}\n\n` + (i === 2 && data.length > 3 ? readMore : '')).join('');
   await message.reply(output.trim());
 });
-
 
 
 System({
@@ -191,44 +175,9 @@ System({
    desc: 'Chat with gemini ai',
    type: 'ai',
 }, async (message, match) => {
-  if (match && message.reply_message?.image) {
-      try {
-         const path = await message.reply_message.downloadAndSaveMedia();
-         const res = await gemini(match, path);
-	if (!res) {
-            return message.reply("*Sorry, I couldn't get a response from Gemini AI.*");
-         }
-             await message.send(res, {
-               contextInfo: {
-               forwardingScore: 1,
-               isForwarded: true,
-               forwardedNewsletterMessageInfo: {
-               newsletterJid: '120363197401188542@newsletter',
-               newsletterName: 'ɢᴇᴍɪɴɪ ᴀɪ'
-               }
-            }
-         });
-      } catch (error) {
-         console.error("Error processing image:", error);
-         message.reply("*Failed to process the image. Please try again.*");
-      }
-   } else if (match) {
-      const res = await gemini(match);
-         if (!res) {
-         return message.reply("*Sorry, I couldn't get a response from Gemini AI.*");
-      }
-           await message.send(res, {
-            contextInfo: {
-            forwardingScore: 1,
-            isForwarded: true,
-            forwardedNewsletterMessageInfo: {
-            newsletterJid: '120363197401188542@newsletter',
-            newsletterName: 'ɢᴇᴍɪɴɪ ᴀɪ'
-            }
-         }
-      });
-   } else {
-      message.reply("_*Need Prompt !!*_\n_*eg: .gemini who is iron man?*_\n _For image you have to Reply to an image and also give a prompt_");
-   }
+  match = match || message.reply_message.text;
+  if (!(match || message.quoted) || (message.quoted && !message.reply_message.image)) return message.reply("_*Need Prompt !!*_\n_*eg: .gemini who is iron man?*_\n _For image you have to Reply to an image and also give a prompt_");
+  const path = message.quoted && message.reply_message?.image ? await message.reply_message.downloadAndSaveMedia() : null;
+  const res = await gemini(match, path);
+  await message.send(res, { contextInfo: { forwardingScore: 1, isForwarded: true, forwardedNewsletterMessageInfo: { newsletterJid: '120363197401188542@newsletter', newsletterName: 'ɢᴇᴍɪɴɪ ᴀɪ' } } });
 });
-
