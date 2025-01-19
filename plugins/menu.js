@@ -75,8 +75,10 @@ System({
         menu += `\n┃  ╰─────────────···▸`;
     }
     menu += ` ╰━━━━━━━━━━━┈⊷\nmade with 🤍`;
-    const url = BOT_INFO.split(';')[2];
-    if (isUrl(url)) await message.sendFromUrl(url, { caption: menu });
+    let url = BOT_INFO.split(';')[2];
+    let options = url.includes('&gif') ? { gifPlayback: true, caption: menu } : { caption: menu };  
+    url = url.replace(/&gif/g, '');
+    if (isUrl(url)) await message.sendFromUrl(url, options);
     else await message.send(menu);
 });
 
