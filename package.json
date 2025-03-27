@@ -13,7 +13,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@whiskeysockets/baileys": "https://github.com/Loki-Xer/Baileys",
+        "@whiskeysockets/baileys": "github:Loki-Xer/Baileys",
         "browser-id3-writer": "^4.4.0",
         "cheerio": "^1.0.0",
         "node-cron": "^3.0.3",
